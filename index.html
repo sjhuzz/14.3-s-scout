@@ -246,12 +246,12 @@ const ROSTER = [
     role: "Wing",
     status: "✅ Available",
     statusColor: GR,
-    tags: ["Wing", "Inconsistent Scorer", "⚠️ Slow Defensively"],
-    scoring: "Wing player with inconsistent scoring output — can contribute in some games but disappears in others. Not a reliable go-to scorer. Best used as a spacing piece off the ball.",
-    fouls: "Gets called for fouls when beaten off the dribble due to slow lateral movement.",
-    coachKey: "White's defensive limitations are a liability vs athletic opponents — Gippsland's wing players (Wallin, Gillow) are quick and will exploit his slow feet. Keep his minutes managed and consider switching his defensive assignment away from Gippsland's fastest players.",
+    tags: ["Wing", "Inconsistent Scorer", "Wing"],
+    scoring: "Wing player who provides spacing off the ball. Best used in a role that emphasises movement and court awareness.",
+    fouls: "Physical play can draw fouls.",
+    coachKey: "Use White for wing spacing and off-ball movement. Rotate him into matchups that suit his strengths.",
     games: [
-      { opp: "Various", pts: "Inconsistent", note: "Role wing — spacing only, not a scoring option to build sets around" },
+      { opp: "Various", pts: "Inconsistent", note: "Wing spacing role" },
     ],
   },
   {
@@ -260,12 +260,12 @@ const ROSTER = [
     role: "Wing",
     status: "✅ Available",
     statusColor: GR,
-    tags: ["Wing", "⚠️ Finishing Issues", "Role Player"],
-    scoring: "Wing player who struggles to convert at the rim — gets into good positions and drives but cannot finish consistently. Limited scoring output as a result. Better as a defensive and hustle contributor than a scoring option.",
+    tags: ["Wing", "Role Player", "Role Player"],
+    scoring: "Wing player who contributes through defence, hustle, and ball movement. Best used for spacing and off-ball activity.",
     fouls: "",
-    coachKey: "Do NOT design plays that end with Speers finishing at the rim — he will not convert. Use him for defensive assignments, hustle, and moving the ball. If he gets an open catch, encourage kick-out passes rather than drives. His value is off-ball and on the glass, not as a finisher.",
+    coachKey: "Use Speers for defensive assignments, hustle, and ball movement. His value is off-ball, on the glass, and in transition.",
     games: [
-      { opp: "Various", pts: "Limited", note: "Finishing at the rim is a weakness — role limited accordingly" },
+      { opp: "Various", pts: "Limited", note: "Hustle and off-ball role" },
     ],
   },
 ];
@@ -278,8 +278,8 @@ const TRAINING = {
   startingFive: [
     { pos:"PG", num:"65", name:"Smith Hurren",   note:"Initiates offence" },
     { pos:"SG", num:"63", name:"Archer Murali",  note:"Primary scorer / shadow Oates" },
-    { pos:"SF", num:"53", name:"Lachlan Speers", note:"Catch-kick, no rim finishes" },
-    { pos:"PF", num:"68", name:"Noah Lentine",   note:"Physical forward, limited 3PT" },
+    { pos:"SF", num:"53", name:"Lachlan Speers", note:"Wing denial, corner spacing" },
+    { pos:"PF", num:"68", name:"Noah Lentine",   note:"Physical forward" },
     { pos:"C",  num:"17", name:"Fletcher Rodda", note:"Post anchor" },
   ],
   blocks: [
@@ -288,10 +288,10 @@ const TRAINING = {
       icon: "🏃",
       desc: "Dynamic warm-up with basketball movement — no static stretching. Get minds locked in from the start.",
       drills: [
-        { name:"Full-court layup lines", dur:"2 min", detail:"Both sides. Left and right hand. Note: Speers — right-hand finish only, no left-hand attempts in game." },
+        { name:"Full-court layup lines", dur:"2 min", detail:"Both sides. Left and right hand. Focus on clean technique and pace." },
         { name:"Defensive slide warm-up", dur:"2 min", detail:"Full-court defensive slides. Emphasis on Murali (#63) — he shadows Oates who drives right. Stay low, stay in front." },
-        { name:"3-man weave", dur:"2 min", detail:"Pace and passing sharpness. Finish with layup — remind Speers: if you get the ball at the rim in the weave, kick it back rather than force the finish." },
-        { name:"Shooting off movement — mid-range only", dur:"2 min", detail:"Catch-and-shoot off a cut. Murali and Jakovlev (off bench) prioritised. Lentine — mid-range catch only, no arc shots." },
+        { name:"3-man weave", dur:"2 min", detail:"Pace and passing sharpness. Finish with layup — focus on pace and passing sharpness." },
+        { name:"Shooting off movement — mid-range only", dur:"2 min", detail:"Catch-and-shoot off a cut. Murali and Jakovlev (off bench) prioritised. Lentine — mid-range catch and movement." },
       ],
     },
     {
@@ -307,7 +307,7 @@ const TRAINING = {
     {
       time: "18–30 min", label: "Offensive Sets — Half-Court Execution", color: GOLD,
       icon: "🎯",
-      desc: "Build the half-court offence around the starting 5's strengths. Speers and Lentine's limitations must be baked into every set — no plays that end with them finishing at the rim or shooting threes.",
+      desc: "Build the half-court offence around the starting 5's strengths. Every set should create high-percentage looks for the primary scorers.",
       drills: [
         { name:"Set 1 — Hurren drive + kick", dur:"4 min", detail:"Hurren (#65) initiates. Drives into paint. Kick options: Murali (#63) wing mid-range, Lentine (#68) forward mid-range catch, Rodda (#17) post-up seal. Speers — corner spacing ONLY, catch-and-kick if ball finds him. Run 5 times each side." },
         { name:"Set 2 — Murali isolation wing", dur:"4 min", detail:"Hurren sets screen for Murali on the wing. Murali catches, attacks. Options: (a) mid-range pull-up, (b) drive baseline to layup, (c) kick to Hurren rolling. Speers and Lentine hold positions — do NOT cut into Murali's drive lane." },
@@ -319,8 +319,8 @@ const TRAINING = {
       icon: "🏀",
       desc: "Starting 5 vs bench/coaches simulating Gippsland's key patterns. Bench players are assigned Gippsland roles.",
       drills: [
-        { name:"Bench roles assigned", dur:"1 min", detail:"Joshua Gilbert = Miller Oates (top-of-key 3PT, drives right). Jakovlev = Jaz Wallin (wing attacks). Kumar = Harvey Beatson (interior). Hurren = Finn Lawrence. Lachlan Speers is instructed: if you get the ball on a drive and the lane is closed — kick back. No contested finishes." },
-        { name:"Scrimmage with coaching stops", dur:"9 min", detail:"Play live. Coach stops play for: (1) any time Speers attempts a contested finish — redirect to kick-out. (2) any time Murali loses Oates above the break — reset and re-shadow. (3) any time McKinnon lets Gippsland score unchallenged in transition. Stops reinforce game-week habits." },
+        { name:"Bench roles assigned", dur:"1 min", detail:"Joshua Gilbert = Miller Oates (top-of-key 3PT, drives right). Jakovlev = Jaz Wallin (wing attacks). Kumar = Harvey Beatson (interior). Hurren = Finn Lawrence. Lachlan Speers focuses on wing denial defence and spacing." },
+        { name:"Scrimmage with coaching stops", dur:"9 min", detail:"Play live. Coach stops play for: (1) any time Murali loses Oates above the break — reset and re-shadow. (3) any time McKinnon lets Gippsland score unchallenged in transition. Stops reinforce game-week habits." },
       ],
     },
     {
@@ -346,14 +346,14 @@ const TRAINING = {
       icon: "📋",
       desc: "Final 3 minutes. Bring it together. Every player leaves knowing exactly what they do.",
       drills: [
-        { name:"Individual role reminders", dur:"2 min", detail:"Smith (#65): you run the team — drive and kick early, get Murali going. Archer (#63): shadow Oates every possession, your scoring comes off Hurren's penetration. Lachlan (#53): catch and kick — your job is denial defence on Wallin and corner spacing. Noah (#68): physical forward presence, mid-range only, no arc shots. Fletcher (#17): establish post position Q1, Rodda-Beatson is our interior battle to win." },
+        { name:"Individual role reminders", dur:"2 min", detail:"Smith (#65): you run the team — drive and kick early, get Murali going. Archer (#63): shadow Oates every possession, your scoring comes off Hurren's penetration. Lachlan (#53): your job is denial defence on Wallin and corner spacing. Noah (#68): physical forward presence and forward spacing. Fletcher (#17): establish post position Q1, Rodda-Beatson is our interior battle to win." },
         { name:"Win condition reminder", dur:"1 min", detail:"We beat Gippsland 34–31 last time. We just beat Frankston 63–21 last night — ran 16–0 in Q1. Gippsland hasn't seen us like this. We are in the best form of the season. Win Q1, stay composed, Murali closes it out. Hands in." },
       ],
     },
   ],
   coachNotes: [
-    "Speers must leave training knowing: catch-and-kick, wing denial, no contested finishes",
-    "Lentine must leave knowing: physical forward presence, mid-range catch only",
+    "Speers focus: wing denial defence and corner spacing",
+    "Lentine focus: physical forward presence and forward spacing",
     "Murali must shadow Oates in every 5-on-5 rep — make it automatic before game day",
     "Rodda's post entry is the counter when perimeter defence locks up Hurren and Murali",
     "The whole team just lived a 16–0 Q1 vs Frankston — channel that on Saturday vs Gippsland",
@@ -753,7 +753,7 @@ function OurRosterTab() {
       <div style={{ background:GR+"22", border:`2px solid ${GR}`, borderRadius:10, padding:12, marginBottom:12 }}>
         <div style={{ color:GR, fontWeight:800, fontSize:12, marginBottom:4 }}>✅ AVAILABILITY CONFIRMED — GIPPSLAND GAME</div>
         <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>
-          <strong style={{ color:GOLD }}>Smith Hurren #65</strong> did not play last night but is <strong style={{ color:GR }}>CONFIRMED PLAYING</strong> vs Gippsland. His return gives McKinnon 14.3 a double-post option with Hunter White — a combination Gippsland has not faced from us before.
+          <strong style={{ color:GOLD }}>Smith Hurren #65</strong> did not play last night but is <strong style={{ color:GR }}>CONFIRMED PLAYING</strong> vs Gippsland. His return strengthens the interior rotation and gives McKinnon 14.3 additional depth up front.
         </div>
       </div>
       {ROSTER.map(p=>(
@@ -1015,8 +1015,8 @@ function GamePlanTab() {
           "Smith Hurren #65 is CONFIRMED — deploy alongside Francis for interior physicality",
           "Brief Jakovlev: score from possession 1. He sets the tone",
           "Brief Murali defender: shadow Miller Oates #29 — no catches above arc",
-          "Brief Hunter White: establish post position first 2 possessions",
-          "Brief Lentine: spot-up at arc when White draws double teams",
+          "Brief Hunter White: wing spacing and off-ball movement",
+          "Brief Lentine: spot-up at forward position when drives collapse the defence",
           "Gippsland foul-prone players: attack Gillow, Lawrence, Brown early",
           "Q1 target: lead by 6+ at the buzzer. Don't repeat McKinnon 4's 10–19 hole",
           "Q4 is zero-zero no matter the score — Gippsland is a Q4 team",
