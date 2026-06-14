@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>McKinnon Cougars 14.3 — Head Coach Scout</title>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #070d18; }
+    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    #root { min-height: 100vh; }
+    button { font-family: inherit; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #0e1a2a; }
+    ::-webkit-scrollbar-thumb { background: #1a3050; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+
+// ── DESIGN TOKENS ────────────────────────────────────────────────────────────
+const MC   = "#8B1A1A";
+const GOLD = "#C9A84C";
+const BG   = "#070d18";
+const C1   = "#0e1a2a";
+const C2   = "#152035";
+const BD   = "#1a3050";
+const TX   = "#dde4f0";
+const MT   = "#52708a";
+const GR   = "#22c55e";
+const RD   = "#ef4444";
+const AM   = "#f59e0b";
+const PU   = "#a78bfa";
+const sans = "'Inter','Helvetica Neue',Arial,sans-serif";
+const BL   = "#3b82f6";
+
+// ── RECENT RESULTS ────────────────────────────────────────────────────────────
+const RECENT_RESULTS = [
+  {
+    opp: "Frankston U14 Boys 5", result: "W", us: 63, them: 21,
+    when: "Last night — VJBL",
+    label: "McKinnon 14.3 DOMINANT WIN",
+    qScores: ["16–0","33–8","51–17","63–21"],
+    note: "Absolutely dominant. Ran 16–0 in Q1 — Frankston scoreless for the entire first quarter. Frankston called a timeout at 1:37 Q2 when McKinnon pushed to 29–6. Murali hit 4 consecutive baskets in Q3. Frankston's key players (Anderson, Walravens, Macpherson, Drew) all in heavy foul trouble. McKinnon suffocated Frankston's offence completely.",
+    stars: [
+      { name:"Mateo Jakovlev #92", pts:"~18", detail:"FTs, 2PT, 2PT — scored in every quarter. FT specialist — 2PT, 1PT, 1PT, 1PT, 2PT run in Q2. Engine throughout." },
+      { name:"Archer Murali #63",  pts:"~16", detail:"4 consecutive 2PT baskets in Q3 (45→47→49→51). FT + 2PT + 2PT + 2PT + 1PT across the game. Unstoppable." },
+      { name:"Joshua Gilbert #60", pts:"~8",  detail:"3PT closing the game + 2PT + FT + 2PT. Strong all-round game from forward." },
+      { name:"Fletcher Rodda #17", pts:"~4",  detail:"FT × 2 in Q1 to open scoring + 2PT in Q4. Post scoring on cue." },
+      { name:"Louis Francis #30",  pts:"~4",  detail:"2PT in Q1 — interior scoring as second post." },
+      { name:"Lachlan Speers #53", pts:"~2",  detail:"Hit a 2PT in Q2 — converted when given the opportunity." },
+      { name:"Smith Hurren #65",   pts:"~2",  detail:"2PT to close the game in Q4." },
+    ],
+    oppNotes: "Frankston completely outclassed. Anderson #66 fouled (3:53 Q1) and restricted. Walravens #16 foul trouble. Macpherson #84 two fouls. Drew #56 foul trouble Q3. Frankston called timeout at 1:37 Q2 — already down 29–6. Ky Dennis #68 (Kumar guarded) fouled. This confirms all Frankston scouting intel — they cannot handle McKinnon's physicality.",
+    momentumNote: "This is the best confirmation possible going into Gippsland. McKinnon 14.3 just destroyed Frankston — a team that gave Gippsland trouble. The 16–0 Q1 opening is exactly the fast-start energy needed for Saturday.",
+  },
+  {
+    opp: "Chelsea U14 Boys 2", result: "W", us: 43, them: 32,
+    when: "Prior week — VJBL",
+    label: "McKinnon 14.3 controlled win",
+    qScores: ["3–0 (MCK)","17–7","24–19","37–24","43–32"],
+    note: "Controlled win against a quality Chelsea side. Hurren returned with 10 pts. Jakovlev led scoring. Chelsea called a timeout at 6:22 — McKinnon's pressure was working. Chapman and Hall were contained.",
+    stars: [
+      { name:"Smith Hurren #65",   pts:"~10", detail:"2PT, 2PT, FT, 3PT to open Q3 — strong return game." },
+      { name:"Mateo Jakovlev #92", pts:"~12", detail:"Multiple 2PT + FTs. FT run in Q2 extended the lead." },
+      { name:"Noah Lentine #68",   pts:"~5",  detail:"3PT from forward spot — perimeter spacing working." },
+      { name:"Fletcher Rodda #17", pts:"~4",  detail:"2PT contributor from post." },
+      { name:"Louis Francis #30",  pts:"~4",  detail:"Interior 2PT." },
+    ],
+    oppNotes: "Jensen Chapman #3 was Chelsea's best (2PT + 3PT). Braxton Hall #33 and Jackson Cordy #55 scored. Harry Stillman and Boekhorst both foul-prone.",
+    momentumNote: "Solid win showing McKinnon can handle a quality perimeter team. Chelsea (#8 and #9 in league with Hall and Summerhayes) were well contained.",
+  },
+];
+
+// ── TODAY'S DATE / NEXT GAME ─────────────────────────────────────────────────
+const NEXT_GAME = {
+  opponent: "Gippsland United U14 Boys 3",
+  when: "Next Weekend",
+  form: "🔥 Last night: W 63–21 vs Frankston · Prior: W 43–32 vs Chelsea",
+  hurren: "Smith Hurren ✅ CONFIRMED PLAYING",
+};
+
+// ── NUNAWADING SPECTRES TOURNAMENT (6–8 Jun 2026) ────────────────────────────
+const TOURNAMENT = {
+  name: "Nunawading Spectres Tournament",
+  dates: "6–8 June 2026",
+  grade: "Boys Under 14 B6",
+  status: "Completed",
+  ourPlayers: [
+    { rank:3,  name:"Mateo Jakovlev", num:"92", gp:6, pts:60, ft:7, avg:10.0, note:"#3 in entire tournament. Elite — 10 pts/game across 6 games. Best McKinnon performer." },
+    { rank:6,  name:"Smith Hurren",   num:"65", gp:6, pts:50, ft:4, avg:8.3,  note:"#6 in tournament. 8.3 pts/game when healthy — his strongest recent form." },
+    { rank:11, name:"Archer Murali",  num:"63", gp:6, pts:41, ft:4, avg:6.8,  note:"#11 in tournament. Consistent across all 6 games — scoring runs still his weapon." },
+  ],
+  topScorers: [
+    { rank:1,  name:"Brandon Abram",        team:"Inner West Bulls U14 Boys 3",      gp:5, pts:73,  isMck:false },
+    { rank:2,  name:"Noah Giuliano",        team:"Diamond Valley Eagles U14 Boys 4", gp:5, pts:62,  isMck:false },
+    { rank:3,  name:"Mateo Jakovlev",       team:"McKinnon Cougars U14 Boys 3",      gp:6, pts:60,  isMck:true  },
+    { rank:4,  name:"Aston Marshall-Chung", team:"Camberwell Dragons U14 Boys 4",    gp:5, pts:59,  isMck:false },
+    { rank:5,  name:"Jensen Chapman",       team:"Chelsea Gulls U14 Boys 2",         gp:6, pts:51,  isMck:false },
+    { rank:6,  name:"Smith Hurren",         team:"McKinnon Cougars U14 Boys 3",      gp:6, pts:50,  isMck:true  },
+    { rank:7,  name:"Edward Date",          team:"Southern Peninsula Sharks U14 B2", gp:4, pts:45,  isMck:false },
+    { rank:8,  name:"Braxton Hall",         team:"Chelsea Gulls U14 Boys 2",         gp:6, pts:43,  isMck:false },
+    { rank:9,  name:"Jett Summerhayes",     team:"Chelsea Gulls U14 Boys 2",         gp:6, pts:43,  isMck:false },
+    { rank:10, name:"Jayden Weimer",        team:"Maroondah Magic U14 Boys 1",       gp:5, pts:42,  isMck:false },
+    { rank:11, name:"Archer Murali",        team:"McKinnon Cougars U14 Boys 3",      gp:6, pts:41,  isMck:true  },
+    { rank:12, name:"Liam O'Flynn",         team:"Camberwell Dragons U14 Boys 4",    gp:5, pts:41,  isMck:false },
+    { rank:13, name:"Blake King",           team:"Southern Peninsula Sharks U14 B2", gp:5, pts:41,  isMck:false },
+    { rank:22, name:"Aterdit Dut",          team:"Blacktown Storm U14 Boys Gold",    gp:5, pts:33,  isMck:false },
+    { rank:23, name:"Jack Robinson",        team:"MLBC Lakers U14 Boys Blue",        gp:5, pts:32,  isMck:false },
+  ],
+  insight: "McKinnon placed 3 players in the top 11 — the strongest multi-player representation of any team in the tournament. Jakovlev at #3 (10 pts/game) is elite. With Hurren at #6 and Murali at #11, McKinnon 14.3 is a top-tier team at full strength.",
+};
+
+// ── McKINNON 14.3 ROSTER ─────────────────────────────────────────────────────
+// Source: all play-by-play + official VJBL leaderboard
+const ROSTER = [
+  {
+    num: "65", name: "Smith Hurren",
+    leaguePts: 67, leagueRank: 24, gp: 10,
+    role: "Starting Point Guard (PG1)",
+    status: "✅ CONFIRMED PLAYING vs Gippsland",
+    statusColor: GR,
+    tags: ["🏆 #24 VJBL League", "🏅 #6 Nunawading Tourney", "8.3 pts/game", "✅ Confirmed", "PG1 Starter"],
+    scoring: "Starting point guard and top 25 in the VJBL P1 league. #6 scorer at the Nunawading Tournament (50 pts / 6 games = 8.3 pts/game). Controls the tempo and initiates the offence. Most recent games: 10 pts vs Chelsea (prior week). Confirmed for Gippsland. Did not play last club game but CONFIRMED for Gippsland.",
+    fouls: "Physical play can draw fouls both ways.",
+    coachKey: "Hurren runs the team as PG1. Get him the ball early in the half-court to set the tone. His interior scoring as a guard is a mismatch advantage — drives and finishes. Pair his physicality with Jakovlev's secondary playmaking to stretch Gippsland's defence.",
+    games: [
+      { opp: "Chelsea U14 Boys 2",   pts: "~10", note: "Dominant return — 2PT, 2PT, FT, 3PT to open Q3" },
+      { opp: "Frankston U14 Boys 5", pts: "~2",  note: "2PT to close Q4 in blowout win" },
+    ],
+  },
+  {
+    num: "92", name: "Mateo Jakovlev",
+    leaguePts: 94, leagueRank: 6, gp: 10,
+    role: "Second Point Guard (PG2)",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["🏆 #6 VJBL League", "🥉 #3 Nunawading Tourney", "10 pts/game", "PG2", "3PT + 2PT + FT"],
+    scoring: "#6 scorer in the entire VJBL P1 AND #3 at Nunawading Tournament (60 pts / 6 games = 10 pts/game). Secondary playmaker who is the team's highest-volume scorer. Hits from mid-range, drives for FTs, and knocks down 3PTs. Last night vs Frankston: FTs, 2PT runs across all quarters — elite form. W 63–21.",
+    fouls: "Gets called occasionally when driving — disciplined overall.",
+    coachKey: "Jakovlev is the primary scoring option off Hurren's initiation. When Hurren draws the defence, Jakovlev must be ready to score. His 3PT range stretches Gippsland's defence and creates driving lanes for everyone. Feed him in Q3/Q4 — he finishes games.",
+    games: [
+      { opp: "Frankston U14 Boys 5", pts: "~18", note: "FT runs + 2PT across all quarters — dominant in blowout" },
+      { opp: "Chelsea U14 Boys 2",  pts: "~12",  note: "Multiple 2PT + FTs across all quarters" },
+    ],
+  },
+  {
+    num: "63", name: "Archer Murali",
+    leaguePts: 81, leagueRank: 11, gp: 11,
+    role: "Trail / Secondary Guard",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["🏆 #11 VJBL League", "🏅 #11 Nunawading Tourney", "Trail Guard", "Q4 Closer", "Scoring Runs"],
+    scoring: "Top 12 in VJBL P1 AND #11 at Nunawading (41 pts / 6 games). Trail guard who operates off the ball and attacks in transition. Famous for explosive consecutive scoring runs — 4 straight baskets in Q4 vs Frankston. scored consistently in recent wins.",
+    fouls: "Fouls occasionally — stays disciplined overall.",
+    coachKey: "Murali is the Q4 closer. Use him as the trail guard to attack when the defence is scrambling. His hot streaks are game-defining — when he gets going, run plays to keep feeding him. Set pin-down screens to free him on the wing.",
+    games: [
+      { opp: "Frankston U14 Boys 5", pts: "~16", note: "4 consecutive 2PT baskets in Q3 — unstoppable run" },
+      { opp: "Chelsea U14 Boys 2",  pts: "~6", note: "FT + 1PT + 2PT — active throughout" },
+    ],
+  },
+  {
+    num: "15", name: "Jaiaan Kumar",
+    leaguePts: null, leagueRank: null, gp: null,
+    role: "Trail / Secondary Guard",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["Trail Guard", "2PT Scorer", "Role Player"],
+    scoring: "Trail/secondary guard who contributes consistent 2PT scoring when called upon. Hit baskets vs Frankston (Q2) and Gippsland in previous matchups. Solid rotation piece — doesn't force the issue, scores within the offence.",
+    fouls: "Occasional fouls.",
+    coachKey: "Kumar is reliable trail guard depth. Use him to rest Murali without losing defensive or offensive presence. His 2PT scoring maintains team pressure when the starters need a breather.",
+    games: [
+      { opp: "Gippsland United (prev)", pts: "~4", note: "Contribution off bench — trail guard role" },
+      { opp: "Frankston U14 B5",        pts: "~4", note: "2PT scorer in Q2" },
+    ],
+  },
+  {
+    num: "60", name: "Joshua Gilbert",
+    leaguePts: 49, leagueRank: 43, gp: 10,
+    role: "Forward",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["#43 League", "Forward", "3PT", "Late-Game"],
+    scoring: "Top 45 in the league. Forward who can stretch the floor and hit big shots — 3PT vs Frankston (Q4 closer) and active from forward in recent wins. Growing role and contribution in later games. Plays forward without clogging the paint.",
+    fouls: "Picks up fouls occasionally.",
+    coachKey: "Gilbert at forward gives McKinnon a floor-stretching option. His 3PT from the forward position is a surprise weapon — when Gippsland's bigs chase Hurren or Jakovlev, Gilbert must be ready to shoot from the forward spot.",
+    games: [
+      { opp: "Frankston U14 Boys 5", pts: "~8", note: "3PT + 2PT + FT — strong forward game" },
+      { opp: "Frankston U14 B5",    pts: "~8", note: "Opening 3PT, FT, multiple 2PT in blowout" },
+    ],
+  },
+  {
+    num: "68", name: "Noah Lentine",
+    leaguePts: 60, leagueRank: 31, gp: 11,
+    role: "Forward",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["#31 League", "Forward", "3PT Threat", "Spacing"],
+    scoring: "Top 35 in the league. Forward who provides perimeter shooting from the forward spot. Confirmed 3PT shooter — hit a three vs Frankston — perimeter threat from forward spot. His range forces Gippsland's big defenders to chase him, opening the paint.",
+    fouls: "Picks up fouls occasionally.",
+    coachKey: "Lentine at forward is a spacing weapon. When Hurren drives or Jakovlev attacks, Lentine spaces to the forward 3PT position. Gippsland's Harvey Beatson is not mobile enough to guard him out there — exploit that. His three vs Frankston shows he can hit when open.",
+    games: [
+      { opp: "Frankston U14 Boys 5", pts: "~5", note: "Active from forward spot" },
+      { opp: "Chelsea U14 Boys 2",  pts: "~5", note: "3PT — perimeter spacing working" },
+    ],
+  },
+  {
+    num: "17", name: "Fletcher Rodda",
+    leaguePts: 48, leagueRank: 44, gp: 11,
+    role: "Post",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["#44 League", "Post", "Interior Scorer", "Physical"],
+    scoring: "Post player in the top 45 of the league. Post scoring has been consistent across wins — FTs in Q1 vs Frankston opened the scoring. Consistent interior presence across all games. Physical and active under the basket.",
+    fouls: "Fouls occasionally — physical post play.",
+    coachKey: "Rodda is the starting post option. Establish him early with post entries — his physicality against Gippsland's interior players is an advantage. His Q1 FTs vs Frankston opened the scoring in the blowout — replicate that post presence.",
+    games: [
+      { opp: "Frankston U14 Boys 5", pts: "~4", note: "FT × 2 in Q1 opened scoring + 2PT Q4" },
+      { opp: "Gippsland United (prev)", pts: "~6", note: "Physical post contribution in the W" },
+    ],
+  },
+  {
+    num: "30", name: "Louis Francis",
+    leaguePts: null, leagueRank: null, gp: null,
+    role: "Post",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["Post", "Physical Presence", "FT Converter"],
+    scoring: "Physical post player who gets to the FT line and converts. Hit 2PT baskets vs Gippsland in the previous win. Provides a physical edge in the paint alongside Rodda — two post options gives McKinnon interior depth.",
+    fouls: "Physical post play attracts fouls both ways.",
+    coachKey: "Francis as second post gives McKinnon a physical interior rotation. Use him against Gippsland's Harvey Beatson in the post — his aggression is an asset. When Rodda needs a rest, Francis maintains the physical interior presence.",
+    games: [
+      { opp: "Frankston U14 Boys 5", pts: "~4", note: "2PT in Q1 interior scoring" },
+      { opp: "Gippsland United (prev)", pts: "~4", note: "2PT + physical presence in the W" },
+    ],
+  },
+  {
+    num: "44", name: "Hunter White",
+    leaguePts: null, leagueRank: null, gp: null,
+    role: "Wing",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["Wing", "Inconsistent Scorer", "⚠️ Slow Defensively"],
+    scoring: "Wing player with inconsistent scoring output — can contribute in some games but disappears in others. Not a reliable go-to scorer. Best used as a spacing piece off the ball.",
+    fouls: "Gets called for fouls when beaten off the dribble due to slow lateral movement.",
+    coachKey: "White's defensive limitations are a liability vs athletic opponents — Gippsland's wing players (Wallin, Gillow) are quick and will exploit his slow feet. Keep his minutes managed and consider switching his defensive assignment away from Gippsland's fastest players.",
+    games: [
+      { opp: "Various", pts: "Inconsistent", note: "Role wing — spacing only, not a scoring option to build sets around" },
+    ],
+  },
+  {
+    num: "53", name: "Lachlan Speers",
+    leaguePts: null, leagueRank: null, gp: null,
+    role: "Wing",
+    status: "✅ Available",
+    statusColor: GR,
+    tags: ["Wing", "⚠️ Finishing Issues", "Role Player"],
+    scoring: "Wing player who struggles to convert at the rim — gets into good positions and drives but cannot finish consistently. Limited scoring output as a result. Better as a defensive and hustle contributor than a scoring option.",
+    fouls: "",
+    coachKey: "Do NOT design plays that end with Speers finishing at the rim — he will not convert. Use him for defensive assignments, hustle, and moving the ball. If he gets an open catch, encourage kick-out passes rather than drives. His value is off-ball and on the glass, not as a finisher.",
+    games: [
+      { opp: "Various", pts: "Limited", note: "Finishing at the rim is a weakness — role limited accordingly" },
+    ],
+  },
+];
+
+// ── THURSDAY TRAINING PLAN (60 MIN) ──────────────────────────────────────────
+const TRAINING = {
+  date: "Thursday — Pre-Gippsland",
+  duration: "60 minutes",
+  focus: "Gippsland-specific preparation",
+  startingFive: [
+    { pos:"PG", num:"65", name:"Smith Hurren",   note:"Initiates offence" },
+    { pos:"SG", num:"63", name:"Archer Murali",  note:"Primary scorer / shadow Oates" },
+    { pos:"SF", num:"53", name:"Lachlan Speers", note:"Catch-kick, no rim finishes" },
+    { pos:"PF", num:"68", name:"Noah Lentine",   note:"Physical forward, limited 3PT" },
+    { pos:"C",  num:"17", name:"Fletcher Rodda", note:"Post anchor" },
+  ],
+  blocks: [
+    {
+      time: "0–8 min", label: "Warm-Up + Activation", color: "#3b82f6",
+      icon: "🏃",
+      desc: "Dynamic warm-up with basketball movement — no static stretching. Get minds locked in from the start.",
+      drills: [
+        { name:"Full-court layup lines", dur:"2 min", detail:"Both sides. Left and right hand. Note: Speers — right-hand finish only, no left-hand attempts in game." },
+        { name:"Defensive slide warm-up", dur:"2 min", detail:"Full-court defensive slides. Emphasis on Murali (#63) — he shadows Oates who drives right. Stay low, stay in front." },
+        { name:"3-man weave", dur:"2 min", detail:"Pace and passing sharpness. Finish with layup — remind Speers: if you get the ball at the rim in the weave, kick it back rather than force the finish." },
+        { name:"Shooting off movement — mid-range only", dur:"2 min", detail:"Catch-and-shoot off a cut. Murali and Jakovlev (off bench) prioritised. Lentine — mid-range catch only, no arc shots." },
+      ],
+    },
+    {
+      time: "8–18 min", label: "Defensive Priorities — Stop Gippsland's Key Players", color: RD,
+      icon: "🛡️",
+      desc: "10 minutes entirely on Gippsland's two biggest threats: Miller Oates and Jaz Wallin. This is the most important block.",
+      drills: [
+        { name:"1-on-1 Oates shadow drill", dur:"4 min", detail:"Murali (#63) shadows a stand-in for Oates. Oates catches above the break — Murali must be chest-to-chest, deny the 3PT look, force left baseline. Run this until Murali's positioning is automatic. Swap with Hurren (#65) as backup shadow for when Murali is off ball." },
+        { name:"Deny the catch — wing denial drill", dur:"3 min", detail:"Gippsland feeds Wallin (#91) and Gillow (#30) on the wing. Speers (#53) practises wing denial — body between catcher and ball. Speers will guard Wallin — he can't be beaten for a catch-and-shoot." },
+        { name:"Rodda post defence vs Beatson", dur:"3 min", detail:"Rodda (#17) practises 3/4 denial on the post entry. Harvey Beatson (#21 league) likes the elbow catch — Rodda must get a hand in the passing lane. Body contact without fouling." },
+      ],
+    },
+    {
+      time: "18–30 min", label: "Offensive Sets — Half-Court Execution", color: GOLD,
+      icon: "🎯",
+      desc: "Build the half-court offence around the starting 5's strengths. Speers and Lentine's limitations must be baked into every set — no plays that end with them finishing at the rim or shooting threes.",
+      drills: [
+        { name:"Set 1 — Hurren drive + kick", dur:"4 min", detail:"Hurren (#65) initiates. Drives into paint. Kick options: Murali (#63) wing mid-range, Lentine (#68) forward mid-range catch, Rodda (#17) post-up seal. Speers — corner spacing ONLY, catch-and-kick if ball finds him. Run 5 times each side." },
+        { name:"Set 2 — Murali isolation wing", dur:"4 min", detail:"Hurren sets screen for Murali on the wing. Murali catches, attacks. Options: (a) mid-range pull-up, (b) drive baseline to layup, (c) kick to Hurren rolling. Speers and Lentine hold positions — do NOT cut into Murali's drive lane." },
+        { name:"Set 3 — Rodda post entry", dur:"4 min", detail:"Hurren enters to Rodda in the post. Rodda (a) scores from post, (b) kick to Murali cutting, (c) kick to Hurren on the perimeter. This is the interior option when Gippsland's perimeter defence tightens. Lentine screens for Murali's cut." },
+      ],
+    },
+    {
+      time: "30–40 min", label: "5-on-5 Controlled Scrimmage — Gippsland Simulation", color: PU,
+      icon: "🏀",
+      desc: "Starting 5 vs bench/coaches simulating Gippsland's key patterns. Bench players are assigned Gippsland roles.",
+      drills: [
+        { name:"Bench roles assigned", dur:"1 min", detail:"Joshua Gilbert = Miller Oates (top-of-key 3PT, drives right). Jakovlev = Jaz Wallin (wing attacks). Kumar = Harvey Beatson (interior). Hurren = Finn Lawrence. Lachlan Speers is instructed: if you get the ball on a drive and the lane is closed — kick back. No contested finishes." },
+        { name:"Scrimmage with coaching stops", dur:"9 min", detail:"Play live. Coach stops play for: (1) any time Speers attempts a contested finish — redirect to kick-out. (2) any time Murali loses Oates above the break — reset and re-shadow. (3) any time McKinnon lets Gippsland score unchallenged in transition. Stops reinforce game-week habits." },
+      ],
+    },
+    {
+      time: "40–50 min", label: "Special Situations — Q1 Fast Start + Q4 Close Out", color: AM,
+      icon: "⚡",
+      desc: "Two situations McKinnon must nail: replicating last night's fast Q1 start, and not letting Gippsland back in Q4.",
+      drills: [
+        { name:"Q1 fast-start drill", dur:"5 min", detail:"Starting 5 runs their opening 4 possessions from the tip at full pace — simulate game speed. Goal: score on 3 of first 4 possessions. Critical: Oates scored 4 x 2PT in Q1 vs Casey — if McKinnon lets him do the same, Gippsland will be up 15–5 early. Rodda sets the first screen, Hurren attacks. Murali on Oates from possession 1." },
+        { name:"Q4 close-out drill", dur:"5 min", detail:"McKinnon up by 6 with 4 minutes left. Gippsland (bench) on offence pushing for a comeback. McKinnon must defend 4 straight possessions without allowing a basket, then convert offensively. Simulate Oates hitting a big shot — call timeout, reset, continue. Build the habit of not panicking." },
+      ],
+    },
+    {
+      time: "50–57 min", label: "Free Throws Under Fatigue", color: GR,
+      icon: "🎯",
+      desc: "Every player shoots 4 FTs after the conditioning of training. Gippsland fouls — McKinnon must convert.",
+      drills: [
+        { name:"FT round — all players", dur:"4 min", detail:"Every player shoots 2 FTs, sprints half-court and back, shoots 2 more. Simulates FT pressure in Q4. Track makes and misses — hold players accountable. Murali, Hurren, and Jakovlev are the priority FT shooters." },
+        { name:"Miss = sprint", dur:"3 min", detail:"Any missed FT = full-court sprint for the shooter. Creates game-pressure mentality. Keeps intensity high at the end of training." },
+      ],
+    },
+    {
+      time: "57–60 min", label: "Team Talk — Game Plan Summary", color: GOLD,
+      icon: "📋",
+      desc: "Final 3 minutes. Bring it together. Every player leaves knowing exactly what they do.",
+      drills: [
+        { name:"Individual role reminders", dur:"2 min", detail:"Smith (#65): you run the team — drive and kick early, get Murali going. Archer (#63): shadow Oates every possession, your scoring comes off Hurren's penetration. Lachlan (#53): catch and kick — your job is denial defence on Wallin and corner spacing. Noah (#68): physical forward presence, mid-range only, no arc shots. Fletcher (#17): establish post position Q1, Rodda-Beatson is our interior battle to win." },
+        { name:"Win condition reminder", dur:"1 min", detail:"We beat Gippsland 34–31 last time. We just beat Frankston 63–21 last night — ran 16–0 in Q1. Gippsland hasn't seen us like this. We are in the best form of the season. Win Q1, stay composed, Murali closes it out. Hands in." },
+      ],
+    },
+  ],
+  coachNotes: [
+    "Speers must leave training knowing: catch-and-kick, wing denial, no contested finishes",
+    "Lentine must leave knowing: physical forward presence, mid-range catch only",
+    "Murali must shadow Oates in every 5-on-5 rep — make it automatic before game day",
+    "Rodda's post entry is the counter when perimeter defence locks up Hurren and Murali",
+    "The whole team just lived a 16–0 Q1 vs Frankston — channel that on Saturday vs Gippsland",
+  ],
+};
+
+// ── GIPPSLAND IN-GAME WEAKNESSES & MISTAKES ──────────────────────────────────
+const GIPPSLAND_WEAKNESSES = {
+  summary: "Gippsland are foul-prone across their entire roster, over-reliant on Miller Oates, and have a confirmed Q2 scoring drought. Against Casey last night they scored only 5 pts in Q2 while Casey scored 15 — going from leading 15–11 to trailing 20–26. When Oates is quiet, their entire offence shuts down. McKinnon must attack hard in Q2.",
+  latestGame: {
+    opp: "Casey U14 Boys 5", result: "W 55–45",
+    when: "Last night",
+    qScores: ["15–11 GIPP","20–26 CASEY","41–36 GIPP","55–45 GIPP"],
+    keyIntel: [
+      "Q2 COLLAPSE: Gippsland scored only 5 pts in Q2 while Casey scored 15 — went from leading to trailing. Oates went quiet and nobody else stepped up.",
+      "Finn Lawrence #31 was their Q4 closer — 7 pts in the final quarter (2PT, 2PT, FT×3). He is more dangerous than previously thought — not just a foul-prone role player.",
+      "Oates had 4 x 2PT in Q1 then was held quiet in Q2 — when denied, Gippsland's offence completely stalls.",
+      "Harvey Beatson fouled in BOTH Q1 and Q3 — confirmed high foul risk. Attack him early.",
+      "Hamish Wheeler fouled in Q1 AND Q3 — but also scored 2PT in Q1 and 3PT in Q2. More dangerous than expected.",
+      "Jaz Wallin fouled in Q4 even in a winning game — foul trouble follows him.",
+      "Ryder Duncan scored first basket of the game (Q1 2PT) — watch for his fast start involvement.",
+    ],
+  },
+  foulMap: [
+    { name:"Elijah Gillow #30",   fouls:"3+ fouls in multiple games — drives both ways draw calls. Near foul-out vs McKinnon Boys 3 and Boys 4.", exploit:"Drive at Gillow every possession he's on the floor. Force him to 2 fouls by the 5-minute mark of Q1. He cannot contain dribble penetration without fouling." },
+    { name:"Finn Lawrence #31",   fouls:"⚠️ UPGRADED THREAT — Fouled heavily across all games BUT is now confirmed as Gippsland's Q4 closer (7 pts vs Casey in Q4). Double danger: fouls early then closes games.", exploit:"Attack Lawrence for fouls in Q1/Q2 to put him in trouble. But do NOT leave him open in Q4 — he becomes their finisher when it's tight. Must be tracked in crunch time." },
+    { name:"Harvey Beatson #24",  fouls:"Fouled in Q1 AND Q3 vs Casey. Confirmed repeated foul trouble across all games.", exploit:"Attack Beatson immediately in Q1 — Hurren drives at him from the opening possession. He will foul. Get him to 2 fouls before half." },
+    { name:"Hamish Wheeler #95",  fouls:"Fouled in Q1 AND Q3 vs Casey. But also hit a 3PT in Q2 vs Casey — more of a scoring threat than previously rated.", exploit:"Close out hard on every Wheeler catch — he can hit from outside (confirmed 3PT vs Casey). But attack him on drives too — he fouls quickly." },
+    { name:"Jaz Wallin #91",      fouls:"Fouled in Q4 vs Casey even in a comfortable win — foul trouble follows him every game.", exploit:"Murali attacks Wallin's right side in Q1. He cannot contain drives without reaching. Get him to 2 fouls early — he becomes passive." },
+    { name:"Zac Brown #25",       fouls:"Foul-prone interior — fouled in nearly every game observed.", exploit:"Francis and Rodda target Brown on post-ups. Drive at him for fouls." },
+    { name:"Miller Oates #29",    fouls:"Fouled in Q1 and Q4 vs Casey — even their best player fouls under pressure.", exploit:"Physical denial frustrates Oates. When Murali denies the catch above the break, Oates pushes and reaches — draw the call." },
+  ],
+  tacticalWeaknesses: [
+    { title:"Q2 SCORING DROUGHT — Confirmed Pattern", icon:"📉",
+      detail:"CRITICAL NEW INTEL from last night vs Casey: Gippsland scored only 5 pts in Q2 (Casey scored 15) — going from leading 15–11 to trailing 20–26. Oates went quiet and their entire offence shut down. This matches their previous pattern — they are entirely Oates-dependent and when he is denied for a quarter, they cannot score.",
+      action:"McKinnon must attack relentlessly in Q2. If Oates is being denied, push the pace and exploit the scoring drought. Goal: outscore Gippsland by 10+ in Q2 to build a lead they cannot recover from." },
+    { title:"Over-Reliant On Miller Oates", icon:"🎯",
+      detail:"When Oates is denied, Gippsland's offence stalls completely — confirmed vs Casey (Q2) and in their McKinnon Boys 3 loss. His 4 x 2PT in Q1 vs Casey shows he starts fast — McKinnon must deny him from tip-off.",
+      action:"Murali shadows Oates from possession 1. No catches above the break. Push him left. When Oates is quiet for even one quarter, Gippsland cannot score." },
+    { title:"Panic Under Sustained Pressure", icon:"😰",
+      detail:"Gippsland called timeouts in BOTH McKinnon losses when under pressure. Casey also forced them into a losing Q2 with sustained 3PT pressure. They do not have an in-game adjustment — when a team executes a plan against them, they crack.",
+      action:"McKinnon's game plan must be sustained every possession. When Gippsland calls a timeout — it means it's working. Come out of every Gippsland timeout even harder." },
+    { title:"Finn Lawrence — Foul Early, Dangerous Late", icon:"⚠️",
+      detail:"UPDATED: Lawrence fouls heavily in Q1/Q2 but becomes Gippsland's Q4 closer. Vs Casey: scored 7 pts in Q4 including FT×3. This is their late-game pattern — foul-prone early, clutch late. McKinnon must attack him for fouls in Q1 then track him closely in Q4.",
+      action:"Attack Lawrence in Q1 to put him in foul trouble. But in Q4 — assign a specific defender to him. Do NOT let him catch the ball in the paint in the final 4 minutes." },
+    { title:"Cannot Hold Leads in Q2", icon:"🔄",
+      detail:"Against Casey they led 15–11 after Q1 then were outscored 15–5 in Q2. Against McKinnon Boys 4 they led in Q3 then nearly lost Q4. They consistently fail to maintain leads when opponents execute a plan.",
+      action:"If McKinnon is behind after Q1 — do NOT panic. Gippsland will slow down in Q2. Sustained McKinnon pressure in Q2 can reverse any deficit." },
+    { title:"Only Two Reliable 3PT Threats", icon:"🏹",
+      detail:"Oates (top of key) and Wheeler (right wing — confirmed 3PT vs Casey) are their only arc threats. Gillow, Lawrence, Wallin and Beatson are mid-range and interior only.",
+      action:"Close out hard on Oates and Wheeler only. Sag off all others — use extra help to double Oates drives and deny Wheeler's right-wing catch." },
+    { title:"Ryder Duncan Opens Games Fast", icon:"⚡",
+      detail:"Duncan scored the FIRST basket of the game vs Casey (2PT at 0:12 of Q1). He is a fast-starter who can set an early tone. His Q3 run vs McKinnon Boys 4 was also damaging.",
+      action:"McKinnon must score FIRST. Get Jakovlev or Murali a basket in the opening 30 seconds — don't let Duncan set the tone. If he hits his first shot, switch immediately." },
+  ],
+  timeoutPattern: "Gippsland called timeouts in BOTH McKinnon losses (Q2 Boys 4 game, Q4 Boys 3 game). Casey also caused them to call a Q3 timeout. McKinnon must treat every Gippsland timeout as confirmation the pressure is working — come out harder every time.",
+};
+
+// ── GIPPSLAND UNITED U14 BOYS 3 — FULL SCOUT ────────────────────────────────
+const GIPPSLAND_PLAYERS = [
+  {
+    num: "29", name: "Miller Oates",
+    leaguePts: 72, leagueRank: 15,
+    threat: 5, threatColor: RD,
+    priority: "🔴 PRIORITY 1 — SHADOW ALL GAME",
+    tags: ["#15 League", "3PT Threat", "Q1 Dominant", "Can Go Quiet", "Primary Engine"],
+    scouting: "The #15 scorer in the league and Gippsland's entire offence. Hit 4 x 2PT in Q1 vs Casey — dominates the opening quarter. BUT went completely quiet in Q2 as Casey denied him and Gippsland scored only 5 pts that quarter. When Oates is shut down, Gippsland cannot function. Fouled in Q1 and Q4 vs Casey — physical denial frustrates him into reaching.",
+    tendencies: [
+      "Attacks hard in Q1 — 4 x 2PT in Q1 vs Casey. Must be denied from the opening tip",
+      "3PT from top of the key — contest every catch above the break",
+      "Drive right side off the dribble — shade his defender to force left",
+      "Goes quiet if denied for 2+ possessions — frustration leads to fouls",
+      "Secondary surge after halftime in Q3 — must re-deny immediately",
+    ],
+    defend: "Murali on Oates from possession 1 — no catches above the break. Push him left. Physical denial in Q1 is the priority — if he scores 4 in Q1 again, Gippsland will be up 15–5. When denied, Oates fouls. After halftime — re-set the denial immediately before his Q3 surge.",
+  },
+  {
+    num: "91", name: "Jaz Wallin",
+    leaguePts: 66, leagueRank: 27,
+    threat: 4, threatColor: RD,
+    priority: "🔴 PRIORITY 2",
+    tags: ["#27 League", "Wing Scorer", "Driver", "Foul Prone"],
+    scouting: "Top 30 in the league. Active wing scorer — drives baseline and hits mid-range. Scored at key moments in the McKinnon Boys 4 game (the one Gippsland won). Gets called for fouls frequently.",
+    tendencies: [
+      "Baseline drive from the right wing — anticipate and cut off",
+      "Runs the floor in transition — must track back",
+      "Fouls in the half-court when pressed — attack him for fouls",
+    ],
+    defend: "Contest every catch on the wing. Make him drive left. He fouls — drive at him offensively to force trouble.",
+  },
+  {
+    num: "24", name: "Harvey Beatson",
+    leaguePts: 69, leagueRank: 21,
+    threat: 4, threatColor: RD,
+    priority: "🔴 PRIORITY 3",
+    tags: ["#21 League", "Interior/Mid-Range", "FT Converter", "Clutch"],
+    scouting: "Top 25 in the league. Hit multiple 2PT and FTs in the tight McKinnon Boys 4 game — Gippsland closed that game with Beatson scoring. Also active in Q4. Interior and mid-range threat with good hands.",
+    tendencies: [
+      "Elbow mid-range — deny the catch at the elbow",
+      "Interior post catches — body him up early",
+      "Active in Q4 — becomes more involved when game is close",
+      "FT line — don't foul him in the paint",
+    ],
+    defend: "Physical defence — deny easy post catches. Body him up without fouling. In McKinnon's win — Beatson was limited to role scoring.",
+  },
+  {
+    num: "30", name: "Elijah Gillow",
+    leaguePts: 67, leagueRank: 25,
+    threat: 4, threatColor: AM,
+    priority: "🟡 PRIORITY 4",
+    tags: ["#25 League", "Perimeter Scorer", "Foul Prone ⚠️"],
+    scouting: "Top 25 in the league. Perimeter and mid-range scorer — active off ball. Fouls frequently: 3+ fouls in multiple games. Drive at him offensively to force foul trouble.",
+    tendencies: [
+      "Catch-and-shoot from the wing — close out hard",
+      "Fouls when beat off the dribble — drive at him",
+      "Active cuts to the basket",
+    ],
+    defend: "Contest all catches. On offence — attack Gillow on drives. He fouls. Force him to 2 fouls before halftime.",
+  },
+  {
+    num: "31", name: "Finn Lawrence",
+    leaguePts: 63, leagueRank: 28,
+    threat: 4, threatColor: RD,
+    priority: "🔴 PRIORITY 4 — UPGRADED",
+    tags: ["#28 League", "⚠️ Q4 Closer", "Foul Prone Early", "2PT + FT"],
+    scouting: "UPGRADED THREAT after Casey game. Lawrence fouled heavily in Q1/Q2 BUT closed the Casey game with 7 pts in Q4 (2PT, 2PT, FT×3). He is Gippsland's Q4 finisher — foul-prone early, dangerous late. Double role: attack him for fouls in Q1, then shadow him tightly in Q4 crunch time.",
+    tendencies: [
+      "Fouls aggressively in Q1/Q2 trying to compensate for poor positioning — attack him early",
+      "In Q4 he catches in the mid-post and drives for FTs — body him up without fouling",
+      "FT shooter — converts under pressure (3 FTs in Q4 vs Casey)",
+      "Mid-range pull-up from the elbow in Q4 — contest every catch",
+    ],
+    defend: "Two-phase approach: Q1/Q2 — drive at Lawrence relentlessly, force him to 2 fouls early and make him passive. Q4 — assign a specific defender, deny the mid-post catch, no easy FT opportunities. He cannot be ignored in the final 4 minutes.",
+  },
+  {
+    num: "95", name: "Hamish Wheeler",
+    leaguePts: null, leagueRank: null,
+    threat: 4, threatColor: AM,
+    priority: "🟡 PRIORITY 5 — UPGRADED",
+    tags: ["3PT Confirmed", "Foul Prone", "Both Ends Threat"],
+    scouting: "UPGRADED after Casey game. Hit a 3PT in Q2 vs Casey AND scored 2PT in Q1. More dangerous than previously rated. Also fouled in Q1 AND Q3 vs Casey — foul trouble is consistent. Two-way threat: can score from arc AND draws fouls on defence. Right-wing 3PT is his primary scoring action.",
+    tendencies: [
+      "3PT from the right wing — his primary scoring action, must close out immediately",
+      "Shot fakes to draw fouls — don't bite, stay vertical",
+      "Fouls when beaten off the dribble — attack him on drives",
+      "Active screener — calls must be made, he sets physical screens",
+    ],
+    defend: "Cannot leave Wheeler open — he is a confirmed 3PT shooter (not just a role player). Murali or Lentine must close out hard on every catch. But also attack him on offence — he fouls in Q1 and Q3 consistently.",
+  },
+  {
+    num: "28", name: "Kaiden Dow",
+    leaguePts: null, leagueRank: null,
+    threat: 2, threatColor: AM,
+    priority: "🟠 MONITOR",
+    tags: ["Interior", "FT Scorer"],
+    scouting: "Physical interior player. Scored clutch FT vs McKinnon Boys 4 near the end — aggressive under the basket. Limited outside threat.",
+    tendencies: ["Physical post play", "Draw fouls inside"],
+    defend: "Physical defence without fouling. Don't let him establish deep post position.",
+  },
+  {
+    num: "21", name: "Ryder Duncan",
+    leaguePts: null, leagueRank: null,
+    threat: 3, threatColor: AM,
+    priority: "🟡 WATCH — Fast Starter",
+    tags: ["Q1 Fast Starter", "Streaky Scorer", "Mid-Range"],
+    scouting: "Scored the FIRST basket of the game vs Casey (2PT at 0:12 Q1). Also went on a mid-game scoring run vs McKinnon Boys 4. Fast starter who can set an early tone — then can disappear for stretches. Streaky — dangerous if he gets going in Q1 or Q3.",
+    tendencies: [
+      "Attacks early in Q1 — watch for him from the opening tip",
+      "Mid-range pull-up off the drive — closes to basket quickly",
+      "Can go on 2–3 basket runs — stop the first one before it starts",
+      "Disappears in some quarters entirely — streaky",
+    ],
+    defend: "McKinnon must score FIRST to take Q1 tone away from Duncan. If he hits his opening basket — switch defensive assignment immediately and deny his second look. His streaks are stoppable — just don't let the first basket lead to a second.",
+  },
+  {
+    num: "25", name: "Zac Brown",
+    leaguePts: null, leagueRank: null,
+    threat: 2, threatColor: MT,
+    priority: "⚪ ROLE",
+    tags: ["Foul Prone", "Interior"],
+    scouting: "Physical role player. Fouls frequently. Limited scoring output but physical presence.",
+    tendencies: ["Fouls in the paint"],
+    defend: "Attack him — he fouls quickly. Drive at him in Q1 to force trouble.",
+  },
+];
+
+// ── GIPPSLAND vs McKINNON HEAD-TO-HEAD ───────────────────────────────────────
+const H2H = {
+  mck3: { result: "W 34–31", label: "McKinnon 14.3 WON", color: GR,
+    qScores: ["10–6 MCK","18–15 MCK","24–21 MCK","34–31 MCK"],
+    howWeWon: [
+      "Hurren and Francis physical in the paint early — drew fouls and scored inside",
+      "Jakovlev and Murali hit clutch mid-range shots in Q3 to hold the lead",
+      "Physical defence on Miller Oates — kept him to ~14 pts",
+      "McKinnon 3 held their nerve in Q4 — Archer Murali scored the closing baskets",
+      "Gippsland called a timeout in Q3 — a sign McKinnon's pressure was working",
+    ],
+    warning: "It was a 3-point game — Gippsland will be motivated for revenge.",
+  },
+  mck4: { result: "L 57–61", label: "McKinnon Boys 4 LOST", color: RD,
+    qScores: ["10–19 GIPP","25–23 MCK4","41–39 MCK4","57–61 GIPP"],
+    howTheyLost: [
+      "Gippsland started 19–10 in Q1 — McKinnon 4 never fully recovered",
+      "Ryder Duncan went on a scoring run in Q3 to cut the lead",
+      "Gippsland outscored McKinnon 4 in Q4 — Harvey Beatson hit closing shots",
+      "McKinnon 4 called 2 timeouts in Q4 — showed panic under pressure",
+      "Jaz Wallin scored consecutive baskets in the final 2 minutes to seal it",
+    ],
+    lesson: "McKinnon 14.3 must NOT let Gippsland start fast. Win Q1 to avoid the hole McKinnon 4 fell into.",
+  },
+};
+
+// ── GAME PLAN FOR GIPPSLAND ───────────────────────────────────────────────────
+const QUARTERS_GIPP = [
+  {
+    q: "Q1", color: AM, title: "Win The Opening — Don't Repeat McKinnon 4's Mistake",
+    pts: [
+      "McKinnon Boys 4 fell behind 10–19 in Q1 — Gippsland then won from there",
+      "Feed Jakovlev and Hurren from the opening possession — they set the tone",
+      "Murali on Miller Oates — no catches above the break for Oates",
+      "Attack Zac Brown and Finn Lawrence early — force fouls before 5 mins",
+      "Goal: lead by 6+ at end of Q1. Replicating the 10–6 opening of our previous win",
+    ],
+  },
+  {
+    q: "Q2", color: GR, title: "Build The Lead — Exploit Their Q2 Drought",
+    pts: [
+      "🔑 KEY INTEL: Gippsland scored only 5 pts in Q2 vs Casey — this is their worst quarter",
+      "Keep denying Oates — when he went quiet in Q2 vs Casey their offence completely shut down",
+      "Push pace and attack Gillow and Lawrence — they will have 2 fouls each by now",
+      "Hurren and Francis in the post — attack Beatson for his 2nd foul (he fouled in Q1 vs Casey)",
+      "Goal: outscore Gippsland by 10+ in Q2 — build a lead they cannot recover from",
+      "Lentine and Gilbert ready for 3PT if Gippsland collapses on Hurren drives",
+    ],
+  },
+  {
+    q: "Q3", color: PU, title: "Hold The Lead — This Is Where They Attack",
+    pts: [
+      "Gippsland outscored McKinnon Boys 4 in Q3 to get back in the game",
+      "Oates becomes most dangerous in Q3 — double-team every touch",
+      "Murali and Rodda scoring runs in Q3 extend the lead",
+      "Wallin and Duncan will push the pace — contest every transition",
+      "Gippsland called a timeout in our Q3 last time — keep the pressure up",
+      "No letup: in McKinnon Boys 4's game they had a lead in Q3 and still lost Q4",
+    ],
+  },
+  {
+    q: "Q4", color: RD, title: "🚨 Close It — No Mercy",
+    pts: [
+      "Gippsland beat McKinnon Boys 4 in Q4 — they are a Q4 team",
+      "Murali must be on the floor in Q4. He closed our last win with back-to-back baskets",
+      "Full pressure on Oates — no open looks, no dribble penetration",
+      "If leading by 6+ — KEEP ATTACKING. Don't sit on a lead",
+      "⚠️ FINN LAWRENCE #31 becomes their Q4 closer — 7 pts vs Casey in Q4. Assign a specific defender to him in crunch time",
+      "Any Gippsland 4-point run = call timeout immediately",
+    ],
+  },
+];
+
+const KEY_MATCHUPS = [
+  { ours:"Jakovlev #92", theirs:"Miller Oates #29", desc:"The battle of the two most important players. Jakovlev (#6 league, 94 pts) must outscore Oates (#15 league, 72 pts). But Jakovlev also needs to be a defensive asset — track Oates off ball." },
+  { ours:"Hurren #65 + Francis #30", theirs:"Harvey Beatson #24", desc:"Interior battle. Hurren is McKinnon's best interior option — physical and consistent. Francis adds aggression. Beatson (#21 league, 69 pts) is Gippsland's interior scorer. Hurren must body him up and deny easy post catches." },
+  { ours:"Murali #63", theirs:"Jaz Wallin #91", desc:"Wing on wing. Murali (#11 league) vs Wallin (#27 league). Murali's volume scoring must exceed Wallin. On defence — Murali's athleticism should contain Wallin's drives." },
+  { ours:"Lentine #68", theirs:"Hamish Wheeler #95", desc:"3PT battle. Both players can hit from arc. McKinnon's advantage is Lentine is more consistent. Contest every Wheeler shot — he hit one three that changed the McKinnon Boys 4 game." },
+];
+
+// ── UI COMPONENTS ─────────────────────────────────────────────────────────────
+const ThreatDots = ({ n, color }) => (
+  <span>{[1,2,3,4,5].map(i=><span key={i} style={{ fontSize:10, color:i<=n?color:"#1e3a5f" }}>●</span>)}</span>
+);
+
+function Tag({ text, color=MT }) {
+  const cMap = {
+    [GOLD]: { bg:GOLD+"22", b:GOLD+"55" },
+    [RD]:   { bg:RD+"22",   b:RD+"55"   },
+    [AM]:   { bg:AM+"22",   b:AM+"55"   },
+    [GR]:   { bg:GR+"22",   b:GR+"55"   },
+    [MT]:   { bg:MT+"22",   b:MT+"55"   },
+  };
+  const s = cMap[color]||cMap[MT];
+  return <span style={{ background:s.bg, border:`1px solid ${s.b}`, color, borderRadius:5, padding:"2px 7px", fontSize:10, fontWeight:700, marginRight:3, marginBottom:3, display:"inline-block" }}>{text}</span>;
+}
+
+function tagColor(tag) {
+  if (tag.includes("League")) return GOLD;
+  if (tag.includes("⚠️")||tag.includes("DNP")||tag.includes("Foul")) return RD;
+  if (tag.includes("3PT")) return PU;
+  return MT;
+}
+
+function Card({ children, accent, style={} }) {
+  return <div style={{ background:C1, border:`1px solid ${accent||BD}`, borderRadius:10, padding:14, marginBottom:10, ...style }}>{children}</div>;
+}
+
+// ── TABS ───────────────────────────────────────────────────────────────────────
+
+function NextGameTab() {
+  return (
+    <div>
+      {/* Next game banner */}
+      <div style={{ background:`linear-gradient(135deg,#0a1a08,#122010)`, border:`2px solid ${GR}`, borderRadius:12, padding:16, marginBottom:14 }}>
+        <div style={{ color:GR, fontWeight:900, fontSize:13, letterSpacing:1, marginBottom:4 }}>🏀 NEXT GAME — SCOUT READY</div>
+        <div style={{ color:TX, fontWeight:800, fontSize:17, marginBottom:4 }}>vs {NEXT_GAME.opponent}</div>
+        <div style={{ color:AM, fontSize:12, fontWeight:700, marginBottom:8 }}>{NEXT_GAME.when}</div>
+        <div style={{ background:GR+"22", border:`1px solid ${GR}55`, borderRadius:8, padding:10 }}>
+          <div style={{ color:GR, fontWeight:800, fontSize:11, marginBottom:4 }}>🔥 CURRENT FORM</div>
+          <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>Last night: <strong style={{ color:GR }}>W 63–21 vs Frankston</strong> — ran 16–0 in Q1. Murali 4 straight in Q3. Jakovlev dominant. Also beat Chelsea 43–32 the prior week. McKinnon 14.3 is in the best form of the season entering Gippsland.</div>
+        </div>
+      </div>
+
+      {/* H2H summary */}
+      <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginBottom:8, letterSpacing:1 }}>📋 HEAD-TO-HEAD HISTORY</div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:14 }}>
+        <div style={{ background:GR+"11", border:`1px solid ${GR}44`, borderRadius:10, padding:12 }}>
+          <div style={{ color:GR, fontWeight:800, fontSize:11, marginBottom:4 }}>McKinnon 14.3</div>
+          <div style={{ color:GR, fontWeight:900, fontSize:18 }}>W 34–31</div>
+          <div style={{ color:MT, fontSize:10, marginTop:2 }}>Previous matchup</div>
+        </div>
+        <div style={{ background:RD+"11", border:`1px solid ${RD}44`, borderRadius:10, padding:12 }}>
+          <div style={{ color:RD, fontWeight:800, fontSize:11, marginBottom:4 }}>McKinnon Boys 4</div>
+          <div style={{ color:RD, fontWeight:900, fontSize:18 }}>L 57–61</div>
+          <div style={{ color:MT, fontSize:10, marginTop:2 }}>Same Gippsland team won</div>
+        </div>
+      </div>
+
+      {/* How we won */}
+      <Card accent={GR}>
+        <div style={{ color:GR, fontWeight:800, fontSize:12, marginBottom:10 }}>✅ HOW McKINNON 14.3 WON LAST TIME (34–31)</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:6, marginBottom:12 }}>
+          {H2H.mck3.qScores.map((q,i)=>(
+            <div key={i} style={{ background:C2, borderRadius:7, padding:"8px 4px", textAlign:"center" }}>
+              <div style={{ color:MT, fontSize:9, marginBottom:3 }}>Q{i+1}</div>
+              <div style={{ color:TX, fontSize:11, fontWeight:700 }}>{q}</div>
+            </div>
+          ))}
+        </div>
+        {H2H.mck3.howWeWon.map((s,i)=>(
+          <div key={i} style={{ display:"flex", gap:8, marginBottom:8 }}>
+            <span style={{ color:GR, flexShrink:0 }}>✓</span>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{s}</div>
+          </div>
+        ))}
+        <div style={{ background:AM+"22", border:`1px solid ${AM}44`, borderRadius:7, padding:10, marginTop:8 }}>
+          <div style={{ color:AM, fontSize:12, fontWeight:700 }}>{H2H.mck3.warning}</div>
+        </div>
+      </Card>
+
+      {/* How McKinnon 4 lost — lessons */}
+      <Card accent={RD}>
+        <div style={{ color:RD, fontWeight:800, fontSize:12, marginBottom:10 }}>⚠️ HOW McKINNON BOYS 4 LOST (57–61) — AVOID THESE ERRORS</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:6, marginBottom:12 }}>
+          {H2H.mck4.qScores.map((q,i)=>(
+            <div key={i} style={{ background:C2, borderRadius:7, padding:"8px 4px", textAlign:"center" }}>
+              <div style={{ color:MT, fontSize:9, marginBottom:3 }}>Q{i+1}</div>
+              <div style={{ color:q.includes("GIPP")?RD:GR, fontSize:11, fontWeight:700 }}>{q}</div>
+            </div>
+          ))}
+        </div>
+        {H2H.mck4.howTheyLost.map((s,i)=>(
+          <div key={i} style={{ display:"flex", gap:8, marginBottom:8 }}>
+            <span style={{ color:RD, flexShrink:0 }}>!</span>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{s}</div>
+          </div>
+        ))}
+        <div style={{ background:GR+"11", border:`1px solid ${GR}33`, borderRadius:7, padding:10, marginTop:8 }}>
+          <div style={{ color:GR, fontSize:12, fontWeight:700 }}>💡 {H2H.mck4.lesson}</div>
+        </div>
+      </Card>
+
+      {/* Key matchups */}
+      <Card accent={GOLD}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginBottom:10 }}>⚔️ KEY MATCHUPS</div>
+        {KEY_MATCHUPS.map((m,i)=>(
+          <div key={i} style={{ background:C2, borderRadius:8, padding:12, marginBottom:8 }}>
+            <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:6, flexWrap:"wrap" }}>
+              <span style={{ color:GOLD, fontWeight:800, fontSize:12 }}>{m.ours}</span>
+              <span style={{ color:MT, fontSize:11 }}>vs</span>
+              <span style={{ color:RD, fontWeight:800, fontSize:12 }}>{m.theirs}</span>
+            </div>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{m.desc}</div>
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
+function OurRosterTab() {
+  const [sel, setSel] = useState(null);
+  return (
+    <div>
+      <Card accent={GOLD}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginBottom:4 }}>McKINNON 14.3 — FULL ROSTER</div>
+        <div style={{ color:MT, fontSize:12 }}>Tap any player for full profile and Gippsland game notes.</div>
+      </Card>
+      {/* DNP Alert */}
+      <div style={{ background:GR+"22", border:`2px solid ${GR}`, borderRadius:10, padding:12, marginBottom:12 }}>
+        <div style={{ color:GR, fontWeight:800, fontSize:12, marginBottom:4 }}>✅ AVAILABILITY CONFIRMED — GIPPSLAND GAME</div>
+        <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>
+          <strong style={{ color:GOLD }}>Smith Hurren #65</strong> did not play last night but is <strong style={{ color:GR }}>CONFIRMED PLAYING</strong> vs Gippsland. His return gives McKinnon 14.3 a double-post option with Hunter White — a combination Gippsland has not faced from us before.
+        </div>
+      </div>
+      {ROSTER.map(p=>(
+        <div key={p.num}>
+          <div onClick={()=>setSel(sel?.num===p.num?null:p)}
+            style={{ background:sel?.num===p.num?C2:C1, border:`1px solid ${sel?.num===p.num?GOLD:BD}`, borderRadius:10, padding:"11px 13px", cursor:"pointer", marginBottom:6 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:11 }}>
+              <div style={{ width:42, height:42, borderRadius:8, background:p.status.includes("DNP")?AM+"33":MC, border:`2px solid ${p.status.includes("DNP")?AM:GOLD}`, display:"flex", alignItems:"center", justifyContent:"center", color:GOLD, fontWeight:900, fontSize:15, flexShrink:0 }}>{p.num}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+                  <div style={{ color:TX, fontWeight:700, fontSize:14 }}>{p.name}</div>
+                  {p.leaguePts&&<div style={{ color:GOLD, fontWeight:900, fontSize:14 }}>{p.leaguePts}<span style={{ color:MT, fontSize:10, fontWeight:400 }}> pts</span></div>}
+                </div>
+                <div style={{ color:MT, fontSize:11, marginTop:1 }}>{p.role}</div>
+                <div style={{ color:p.statusColor, fontSize:10, fontWeight:700, marginTop:2 }}>{p.status}</div>
+                <div style={{ marginTop:5 }}>{p.tags.map(t=><Tag key={t} text={t} color={tagColor(t)} />)}</div>
+              </div>
+            </div>
+          </div>
+          {sel?.num===p.num&&(
+            <div style={{ background:C2, border:`1px solid ${GOLD}`, borderRadius:10, padding:14, marginBottom:8, marginTop:-4 }}>
+              <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:6 }}>📊 SCORING PROFILE</div>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:10 }}>{p.scoring}</div>
+              {p.fouls&&<><div style={{ color:AM, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:6 }}>⚠️ FOUL NOTES</div><div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:10 }}>{p.fouls}</div></>}
+              <div style={{ background:"#042009", border:`1px solid ${GR}33`, borderRadius:8, padding:10, marginBottom:10 }}>
+                <div style={{ color:GR, fontWeight:800, fontSize:11, marginBottom:4 }}>💡 COACHING KEY — vs GIPPSLAND</div>
+                <div style={{ color:TX, fontSize:12, lineHeight:1.7 }}>{p.coachKey}</div>
+              </div>
+              {p.leagueRank&&<div style={{ color:MT, fontSize:11, textAlign:"center" }}>#{p.leagueRank} in league · {p.leaguePts} pts in {p.gp} games · {(p.leaguePts/p.gp).toFixed(1)} pts/game avg</div>}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function GippslandScoutTab() {
+  const [sel, setSel] = useState(null);
+  const [view, setView] = useState("players"); // "players" | "weaknesses"
+  const priority = GIPPSLAND_PLAYERS.filter(p=>p.threat>=4);
+  const others   = GIPPSLAND_PLAYERS.filter(p=>p.threat<4);
+  return (
+    <div>
+      {/* Sub-nav */}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:12 }}>
+        {[["players","👤 Player Profiles"],["weaknesses","💥 Weaknesses & Mistakes"]].map(([v,l])=>(
+          <button key={v} onClick={()=>{setView(v);setSel(null);}} style={{ background:view===v?RD+"33":"none", border:`1px solid ${view===v?RD:BD}`, color:view===v?RD:MT, borderRadius:8, padding:"9px 6px", fontSize:12, fontWeight:view===v?800:400, cursor:"pointer", fontFamily:sans }}>{l}</button>
+        ))}
+      </div>
+
+      {view==="weaknesses"&&(
+        <div>
+          {/* Latest game */}
+          <div style={{ background:"#0a1a20", border:`2px solid ${BL}`, borderRadius:12, padding:14, marginBottom:14 }}>
+            <div style={{ color:BL, fontWeight:900, fontSize:12, letterSpacing:1, marginBottom:4 }}>📋 GIPPSLAND LAST GAME — {GIPPSLAND_WEAKNESSES.latestGame.when.toUpperCase()}</div>
+            <div style={{ color:TX, fontWeight:700, fontSize:14, marginBottom:6 }}>vs {GIPPSLAND_WEAKNESSES.latestGame.opp} · {GIPPSLAND_WEAKNESSES.latestGame.result}</div>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:5, marginBottom:12 }}>
+              {GIPPSLAND_WEAKNESSES.latestGame.qScores.map((q,i)=>(
+                <div key={i} style={{ background:C2, borderRadius:6, padding:"6px 3px", textAlign:"center" }}>
+                  <div style={{ color:MT, fontSize:9 }}>Q{i+1}</div>
+                  <div style={{ color:q.includes("CASEY")?RD:q.includes("GIPP")?GR:TX, fontSize:10, fontWeight:700, marginTop:2 }}>{q.replace(" CASEY","").replace(" GIPP","")}</div>
+                  {q.includes("CASEY")&&<div style={{ color:RD, fontSize:8, marginTop:1 }}>Casey led</div>}
+                  {q.includes("GIPP")&&<div style={{ color:GR, fontSize:8, marginTop:1 }}>Gipp led</div>}
+                </div>
+              ))}
+            </div>
+            <div style={{ color:AM, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>🔑 KEY INTEL FOR McKINNON</div>
+            {GIPPSLAND_WEAKNESSES.latestGame.keyIntel.map((k,i)=>(
+              <div key={i} style={{ display:"flex", gap:8, marginBottom:7, paddingLeft:6, borderLeft:`2px solid ${i===0?RD:i===1?AM:BL}55` }}>
+                <div style={{ color:TX, fontSize:11, lineHeight:1.6 }}>{k}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Summary */}
+          <div style={{ background:"#1a0505", border:`2px solid ${RD}`, borderRadius:12, padding:14, marginBottom:14 }}>
+            <div style={{ color:RD, fontWeight:900, fontSize:13, letterSpacing:1, marginBottom:6 }}>💥 HOW TO BREAK GIPPSLAND</div>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.7 }}>{GIPPSLAND_WEAKNESSES.summary}</div>
+          </div>
+
+          {/* Timeout pattern */}
+          <div style={{ background:AM+"11", border:`1px solid ${AM}44`, borderRadius:10, padding:12, marginBottom:14 }}>
+            <div style={{ color:AM, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:6 }}>⏱️ TIMEOUT PATTERN — KEY INTEL</div>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.7 }}>{GIPPSLAND_WEAKNESSES.timeoutPattern}</div>
+          </div>
+
+          {/* Tactical weaknesses */}
+          <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>TACTICAL VULNERABILITIES</div>
+          {GIPPSLAND_WEAKNESSES.tacticalWeaknesses.map((w,i)=>(
+            <div key={i} style={{ background:C1, border:`1px solid ${BD}`, borderRadius:10, padding:14, marginBottom:10 }}>
+              <div style={{ display:"flex", gap:10, alignItems:"flex-start", marginBottom:8 }}>
+                <span style={{ fontSize:22 }}>{w.icon}</span>
+                <div style={{ color:TX, fontWeight:800, fontSize:14 }}>{w.title}</div>
+              </div>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:10 }}>{w.detail}</div>
+              <div style={{ background:"#042009", border:`1px solid ${GR}33`, borderRadius:8, padding:10 }}>
+                <div style={{ color:GR, fontWeight:800, fontSize:10, letterSpacing:1, marginBottom:4 }}>▶ EXPLOIT</div>
+                <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{w.action}</div>
+              </div>
+            </div>
+          ))}
+
+          {/* Foul map */}
+          <div style={{ color:RD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8, marginTop:4 }}>🚨 FOUL MAP — WHO TO ATTACK</div>
+          {GIPPSLAND_WEAKNESSES.foulMap.map((p,i)=>(
+            <div key={i} style={{ background:C1, border:`1px solid ${RD}33`, borderRadius:10, padding:12, marginBottom:8, borderLeft:`3px solid ${RD}` }}>
+              <div style={{ color:RD, fontWeight:800, fontSize:13, marginBottom:4 }}>{p.name}</div>
+              <div style={{ color:MT, fontSize:11, marginBottom:6 }}>📋 {p.fouls}</div>
+              <div style={{ background:"#042009", border:`1px solid ${GR}33`, borderRadius:7, padding:8 }}>
+                <div style={{ color:GR, fontWeight:800, fontSize:10, letterSpacing:1, marginBottom:3 }}>▶ HOW TO EXPLOIT</div>
+                <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{p.exploit}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {view==="players"&&(
+        <div>
+      <Card accent={RD}>
+        <div style={{ color:RD, fontWeight:800, fontSize:12, marginBottom:4 }}>🎯 GIPPSLAND UNITED U14 BOYS 3 — FULL SCOUT</div>
+        <div style={{ color:MT, fontSize:12 }}>They BEAT McKinnon Boys 4 (61–57) but LOST to McKinnon 14.3 (31–34). They want revenge.</div>
+      </Card>
+
+      {/* Their scorers from leaderboard */}
+      <Card accent={BD}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:11, marginBottom:8 }}>📊 OFFICIAL VJBL SCORING LEADERBOARD — GIPPSLAND PLAYERS</div>
+        {[
+          { rank:15, name:"Miller Oates",   pts:72, note:"Their engine" },
+          { rank:21, name:"Harvey Beatson", pts:69, note:"Interior/mid-range" },
+          { rank:25, name:"Elijah Gillow",  pts:67, note:"Perimeter scorer" },
+          { rank:27, name:"Jaz Wallin",     pts:66, note:"Wing driver" },
+          { rank:28, name:"Finn Lawrence",  pts:63, note:"Wing/forward" },
+        ].map(p=>(
+          <div key={p.rank} style={{ display:"flex", alignItems:"center", gap:10, padding:"7px 0", borderBottom:`1px solid ${BD}33` }}>
+            <div style={{ width:26, color:RD, fontWeight:800, fontSize:12, textAlign:"right" }}>#{p.rank}</div>
+            <div style={{ flex:1 }}>
+              <div style={{ color:TX, fontWeight:600, fontSize:13 }}>{p.name}</div>
+              <div style={{ color:MT, fontSize:10 }}>{p.note}</div>
+            </div>
+            <div style={{ color:TX, fontWeight:700, fontSize:14 }}>{p.pts}</div>
+          </div>
+        ))}
+      </Card>
+
+      <div style={{ color:RD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>PRIMARY THREATS</div>
+      {priority.map(p=>(
+        <div key={p.num}>
+          <div onClick={()=>setSel(sel?.num===p.num?null:p)}
+            style={{ background:sel?.num===p.num?C2:C1, border:`1px solid ${sel?.num===p.num?GOLD:BD}`, borderRadius:10, padding:"11px 13px", cursor:"pointer", marginBottom:6 }}>
+            <div style={{ display:"flex", gap:11, alignItems:"center" }}>
+              <div style={{ width:42, height:42, borderRadius:8, background:"#0a1a08", border:`2px solid ${p.threatColor}`, display:"flex", alignItems:"center", justifyContent:"center", color:AM, fontWeight:900, fontSize:14, flexShrink:0 }}>#{p.num}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ display:"flex", justifyContent:"space-between" }}>
+                  <div style={{ color:TX, fontWeight:800, fontSize:14 }}>{p.name}</div>
+                  <div>
+                    <ThreatDots n={p.threat} color={p.threatColor} />
+                  </div>
+                </div>
+                <div style={{ color:MT, fontSize:11, marginTop:1 }}>{p.priority}</div>
+                {p.leaguePts&&<div style={{ color:GOLD, fontSize:11, marginTop:1 }}>#{p.leagueRank} league · {p.leaguePts} pts</div>}
+                <div style={{ marginTop:5 }}>{p.tags.map(t=><Tag key={t} text={t} color={t.includes("League")?GOLD:t.includes("Foul")?RD:t.includes("3PT")?PU:MT} />)}</div>
+              </div>
+            </div>
+          </div>
+          {sel?.num===p.num&&(
+            <div style={{ background:C2, border:`1px solid ${GOLD}`, borderRadius:10, padding:14, marginBottom:8, marginTop:-4 }}>
+              <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:6 }}>📊 SCOUTING REPORT</div>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:10 }}>{p.scouting}</div>
+              <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:6 }}>🔍 TENDENCIES</div>
+              {p.tendencies.map((t,i)=>(
+                <div key={i} style={{ color:TX, fontSize:12, marginBottom:6, paddingLeft:8, borderLeft:`2px solid ${AM}66`, lineHeight:1.5 }}>→ {t}</div>
+              ))}
+              <div style={{ background:"#042009", border:`1px solid ${GR}33`, borderRadius:8, padding:10, marginTop:8 }}>
+                <div style={{ color:GR, fontWeight:800, fontSize:11, marginBottom:4 }}>✅ HOW TO DEFEND</div>
+                <div style={{ color:TX, fontSize:12, lineHeight:1.7 }}>{p.defend}</div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      <div style={{ color:MT, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8, marginTop:16 }}>SECONDARY / MONITOR</div>
+      {others.map(p=>(
+        <div key={p.num}>
+          <div onClick={()=>setSel(sel?.num===p.num?null:p)}
+            style={{ background:sel?.num===p.num?C2:C1, border:`1px solid ${sel?.num===p.num?GOLD:BD}`, borderRadius:10, padding:"9px 13px", cursor:"pointer", marginBottom:6, display:"flex", alignItems:"center", gap:11 }}>
+            <div style={{ width:36, height:36, borderRadius:6, background:C2, border:`1px solid ${BD}`, display:"flex", alignItems:"center", justifyContent:"center", color:MT, fontWeight:700, fontSize:12, flexShrink:0 }}>#{p.num}</div>
+            <div style={{ flex:1 }}>
+              <div style={{ color:TX, fontWeight:600, fontSize:13 }}>{p.name}</div>
+              <div style={{ color:MT, fontSize:11 }}>{p.priority}</div>
+            </div>
+            <ThreatDots n={p.threat} color={p.threatColor} />
+          </div>
+          {sel?.num===p.num&&(
+            <div style={{ background:C2, border:`1px solid ${GOLD}`, borderRadius:10, padding:14, marginBottom:8, marginTop:-4 }}>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:8 }}>{p.scouting}</div>
+              <div style={{ background:"#042009", border:`1px solid ${GR}33`, borderRadius:8, padding:10 }}>
+                <div style={{ color:GR, fontWeight:800, fontSize:11, marginBottom:4 }}>✅ HOW TO DEFEND</div>
+                <div style={{ color:TX, fontSize:12, lineHeight:1.7 }}>{p.defend}</div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+      </div>
+      )}
+    </div>
+  );
+}
+
+function GamePlanTab() {
+  return (
+    <div>
+      <Card accent={GOLD}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginBottom:4 }}>📋 McKINNON 14.3 vs GIPPSLAND — GAME PLAN</div>
+        <div style={{ color:MT, fontSize:12 }}>Built from both head-to-head matchups. We won 34–31 last time — let's win bigger.</div>
+      </Card>
+      {QUARTERS_GIPP.map((q,i)=>(
+        <div key={i} style={{ background:C1, border:`1px solid ${q.color}44`, borderRadius:10, padding:16, marginBottom:12 }}>
+          <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:12 }}>
+            <div style={{ width:44, height:44, borderRadius:8, background:q.color+"22", border:`2px solid ${q.color}`, display:"flex", alignItems:"center", justifyContent:"center", color:q.color, fontWeight:900, fontSize:18 }}>{q.q}</div>
+            <div>
+              <div style={{ color:q.color, fontWeight:800, fontSize:15 }}>{q.title}</div>
+              <div style={{ color:MT, fontSize:11 }}>Quarter {i+1} instructions</div>
+            </div>
+          </div>
+          {q.pts.map((pt,j)=>(
+            <div key={j} style={{ display:"flex", gap:10, marginBottom:10, alignItems:"flex-start" }}>
+              <div style={{ width:20, height:20, borderRadius:4, border:`2px solid ${q.color}66`, flexShrink:0, marginTop:1 }} />
+              <div style={{ color:TX, fontSize:13, lineHeight:1.6 }}>{pt}</div>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {/* Timeout triggers */}
+      <Card accent={RD}>
+        <div style={{ color:RD, fontWeight:800, fontSize:12, marginBottom:10 }}>🚨 CALL TIMEOUT WHEN...</div>
+        {[
+          "Gippsland scores 4 unanswered — stop ANY run",
+          "Miller Oates hits consecutive baskets — reset defence immediately",
+          "McKinnon 14.3 goes 2 minutes without scoring — reset offence",
+          "Gippsland makes any run in Q4 — treat Q4 as 0–0",
+          "A key player (Jakovlev/White/Murali) picks up 3rd foul before Q4",
+        ].map((t,i)=>(
+          <div key={i} style={{ display:"flex", gap:8, marginBottom:8 }}>
+            <span style={{ color:RD, fontWeight:700, flexShrink:0 }}>!</span>
+            <div style={{ color:TX, fontSize:13, lineHeight:1.5 }}>{t}</div>
+          </div>
+        ))}
+      </Card>
+
+      {/* Pre-game checklist */}
+      <Card accent={GR}>
+        <div style={{ color:GR, fontWeight:800, fontSize:12, marginBottom:10 }}>✅ PRE-GAME CHECKLIST</div>
+        {[
+          "Smith Hurren #65 is CONFIRMED — deploy alongside Francis for interior physicality",
+          "Brief Jakovlev: score from possession 1. He sets the tone",
+          "Brief Murali defender: shadow Miller Oates #29 — no catches above arc",
+          "Brief Hunter White: establish post position first 2 possessions",
+          "Brief Lentine: spot-up at arc when White draws double teams",
+          "Gippsland foul-prone players: attack Gillow, Lawrence, Brown early",
+          "Q1 target: lead by 6+ at the buzzer. Don't repeat McKinnon 4's 10–19 hole",
+          "Q4 is zero-zero no matter the score — Gippsland is a Q4 team",
+          "Oates scored 4 x 2PT in Q1 vs Casey — deny him from possession 1, no catches above the break",
+          "Gippsland scored only 5 pts in Q2 vs Casey — attack relentlessly in Q2 to exploit their drought",
+          "⚠️ Finn Lawrence #31 is their Q4 closer (7 pts vs Casey) — track him in the final 4 minutes",
+          "Wheeler is confirmed 3PT from right wing — close out hard on every catch",
+        ].map((t,i)=>(
+          <div key={i} style={{ display:"flex", gap:10, marginBottom:10, alignItems:"flex-start" }}>
+            <div style={{ width:18, height:18, borderRadius:3, border:`2px solid ${GOLD}`, flexShrink:0, marginTop:2 }} />
+            <div style={{ color:TX, fontSize:13, lineHeight:1.5 }}>{t}</div>
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
+function RecentResultsTab() {
+  const [sel, setSel] = useState(null);
+  return (
+    <div>
+      {/* Form banner */}
+      <div style={{ background:`linear-gradient(135deg,#0a1a08,#1a2010)`, border:`2px solid ${GR}`, borderRadius:12, padding:14, marginBottom:14 }}>
+        <div style={{ color:GR, fontWeight:900, fontSize:13, letterSpacing:1, marginBottom:4 }}>🔥 CURRENT FORM — LAST GAME NIGHT</div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+          {RECENT_RESULTS.map((r,i)=>(
+            <div key={i} style={{ background:GR+"11", border:`1px solid ${GR}44`, borderRadius:9, padding:10 }}>
+              <div style={{ color:GR, fontWeight:900, fontSize:18 }}>W {r.us}–{r.them}</div>
+              <div style={{ color:TX, fontWeight:700, fontSize:12, marginTop:2 }}>vs {r.opp.split(" ")[0]}</div>
+              <div style={{ color:MT, fontSize:10, marginTop:2 }}>+{r.us-r.them} margin</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginTop:10, textAlign:"center" }}>
+          Combined margin: +{RECENT_RESULTS.reduce((a,r)=>a+(r.us-r.them),0)} pts in 2 games 🏆
+        </div>
+      </div>
+
+      {/* Each game */}
+      {RECENT_RESULTS.map((r,i)=>(
+        <div key={i}>
+          <div onClick={()=>setSel(sel===i?null:i)}
+            style={{ background:sel===i?C2:C1, border:`1px solid ${sel===i?GOLD:BD}`, borderRadius:10, padding:"13px 14px", cursor:"pointer", marginBottom:6 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div>
+                <div style={{ color:TX, fontWeight:700, fontSize:14 }}>vs {r.opp}</div>
+                <div style={{ color:MT, fontSize:11, marginTop:2 }}>Last game night</div>
+              </div>
+              <div style={{ textAlign:"right" }}>
+                <div style={{ color:GR, fontWeight:900, fontSize:20 }}>W {r.us}–{r.them}</div>
+                <div style={{ color:GR, fontSize:11, fontWeight:700 }}>+{r.us-r.them}</div>
+              </div>
+            </div>
+            {/* Quarter bar */}
+            <div style={{ display:"grid", gridTemplateColumns:`repeat(${r.qScores.length},1fr)`, gap:4, marginTop:10 }}>
+              {r.qScores.map((q,j)=>(
+                <div key={j} style={{ background:C2, borderRadius:5, padding:"5px 2px", textAlign:"center" }}>
+                  <div style={{ color:MT, fontSize:8, marginBottom:2 }}>{j===r.qScores.length-1?"F":`Q${j+1}`}</div>
+                  <div style={{ color:TX, fontSize:10, fontWeight:700 }}>{q}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {sel===i&&(
+            <div style={{ background:C2, border:`1px solid ${GOLD}`, borderRadius:10, padding:14, marginBottom:10, marginTop:-4 }}>
+              {/* Game note */}
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:12, paddingLeft:8, borderLeft:`3px solid ${GR}` }}>{r.note}</div>
+              {r.qScores&&(
+                <div style={{ display:"grid", gridTemplateColumns:`repeat(${r.qScores.length},1fr)`, gap:5, marginBottom:12 }}>
+                  {r.qScores.map((q,j)=>(
+                    <div key={j} style={{ background:C1, borderRadius:6, padding:"6px 3px", textAlign:"center" }}>
+                      <div style={{ color:MT, fontSize:9 }}>{j===r.qScores.length-1?"F":`Q${j+1}`}</div>
+                      <div style={{ color:TX, fontSize:10, fontWeight:700, marginTop:2 }}>{q}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Star performers */}
+              <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>⭐ McKINNON SCORERS</div>
+              {r.stars.map((s,j)=>(
+                <div key={j} style={{ background:C1, borderRadius:8, padding:"10px 12px", marginBottom:6, borderLeft:`3px solid ${GOLD}` }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:3 }}>
+                    <div style={{ color:GOLD, fontWeight:700, fontSize:13 }}>{s.name}</div>
+                    <div style={{ color:GR, fontWeight:900, fontSize:14 }}>{s.pts}</div>
+                  </div>
+                  <div style={{ color:MT, fontSize:11, lineHeight:1.5 }}>{s.detail}</div>
+                </div>
+              ))}
+
+              {/* Opponent notes */}
+              <div style={{ color:RD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:6, marginTop:12 }}>🔍 OPPONENT INTEL</div>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, paddingLeft:8, borderLeft:`3px solid ${RD}44` }}>{r.oppNotes}</div>
+              {r.momentumNote&&(
+                <div style={{ background:GOLD+"11", border:`1px solid ${GOLD}44`, borderRadius:8, padding:10, marginTop:10 }}>
+                  <div style={{ color:GOLD, fontWeight:800, fontSize:11, marginBottom:4 }}>💡 HEADING INTO GIPPSLAND</div>
+                  <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{r.momentumNote}</div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Momentum note */}
+      <div style={{ background:C1, border:`1px solid ${GOLD}`, borderRadius:10, padding:14 }}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginBottom:10 }}>💡 HEADING INTO GIPPSLAND — MOMENTUM</div>
+        {[
+          "Jakovlev just put up ~18 pts vs Frankston — FTs and 2PT in every quarter. Peaking at the right time",
+          "Hurren back and contributing — 10 pts vs Chelsea, scored vs Frankston. Interior depth is real",
+          "Gilbert hit a 3PT vs Frankston, Lentine hit one vs Chelsea — perimeter threat is real",
+          "Rodda opened scoring with FTs vs Frankston in Q1 — his post presence sets the physical tone",
+          "Frankston — who scored 69+ pts in VJBL — were held to 21 pts total. McKinnon's defence is elite",
+          "McKinnon 14.3 enters Gippsland off a 63–21 demolition of Frankston — best form of the season",
+        ].map((t,i)=>(
+          <div key={i} style={{ display:"flex", gap:8, marginBottom:8 }}>
+            <span style={{ color:GR, flexShrink:0 }}>→</span>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{t}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TournamentTab() {
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ background:`linear-gradient(135deg,#0a1200,#182008)`, border:`2px solid ${GR}`, borderRadius:12, padding:16, marginBottom:14 }}>
+        <div style={{ color:GR, fontWeight:900, fontSize:13, letterSpacing:1, marginBottom:2 }}>🏆 TOURNAMENT REPORT</div>
+        <div style={{ color:TX, fontWeight:800, fontSize:16, marginBottom:2 }}>{TOURNAMENT.name}</div>
+        <div style={{ color:MT, fontSize:12 }}>{TOURNAMENT.dates} · {TOURNAMENT.grade} · {TOURNAMENT.status}</div>
+      </div>
+
+      {/* Our players podium */}
+      <Card accent={GOLD}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:12, marginBottom:12, letterSpacing:1 }}>🥇 McKINNON 14.3 TOURNAMENT SCORERS</div>
+        <div style={{ color:MT, fontSize:11, marginBottom:12 }}>3 players in the top 11 — strongest multi-player showing of any team</div>
+        {TOURNAMENT.ourPlayers.map((p,i)=>(
+          <div key={p.num} style={{ background:C2, border:`1px solid ${i===0?GOLD:i===1?"#C0C0C0":"#CD7F32"}66`, borderRadius:10, padding:14, marginBottom:10 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:8 }}>
+              <div style={{ width:44, height:44, borderRadius:8, background:MC, border:`2px solid ${i===0?GOLD:i===1?"#C0C0C0":"#CD7F32"}`, display:"flex", alignItems:"center", justifyContent:"center", color:GOLD, fontWeight:900, fontSize:14, flexShrink:0 }}>#{p.num}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ color:TX, fontWeight:800, fontSize:15 }}>{p.name}</div>
+                <div style={{ color:i===0?GOLD:i===1?"#C0C0C0":"#CD7F32", fontWeight:800, fontSize:12 }}>#{p.rank} Tournament · {p.gp} games</div>
+              </div>
+              <div style={{ textAlign:"right" }}>
+                <div style={{ color:GOLD, fontWeight:900, fontSize:22 }}>{p.pts}</div>
+                <div style={{ color:MT, fontSize:10 }}>pts total</div>
+              </div>
+            </div>
+            {/* Stat bars */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:8 }}>
+              {[
+                { label:"Total Pts", value:p.pts, max:75, color:GOLD },
+                { label:"Avg/Game",  value:p.avg, max:12, color:GR, dec:1 },
+                { label:"FTs Made",  value:p.ft,  max:25, color:PU },
+              ].map(s=>(
+                <div key={s.label} style={{ background:C1, borderRadius:6, padding:"8px 10px" }}>
+                  <div style={{ color:s.color, fontWeight:900, fontSize:16 }}>{s.dec?s.value.toFixed(1):s.value}</div>
+                  <div style={{ color:MT, fontSize:9, marginBottom:4 }}>{s.label}</div>
+                  <div style={{ background:"#1e3a5f33", borderRadius:3, height:4 }}>
+                    <div style={{ width:`${(s.value/s.max)*100}%`, background:s.color, borderRadius:3, height:4 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ color:MT, fontSize:11, lineHeight:1.5 }}>{p.note}</div>
+          </div>
+        ))}
+      </Card>
+
+      {/* Insight */}
+      <Card accent={GR}>
+        <div style={{ color:GR, fontWeight:800, fontSize:12, marginBottom:8 }}>💡 COACHING INSIGHT — HEADING INTO GIPPSLAND</div>
+        <div style={{ color:TX, fontSize:12, lineHeight:1.8 }}>{TOURNAMENT.insight}</div>
+        <div style={{ marginTop:12, display:"flex", flexDirection:"column", gap:8 }}>
+          {[
+            "Jakovlev's 10 pts/game is the best recent form of his season — he's peaking at the right time",
+            "Hurren's #6 finish (50 pts) shows what McKinnon looks like at full strength — confirmed for Gippsland",
+            "Murali's #11 consistency confirms his role as McKinnon's Q4 closer",
+            "No other team in the tournament matched McKinnon's 3-player top-11 depth",
+          ].map((t,i)=>(
+            <div key={i} style={{ display:"flex", gap:8 }}>
+              <span style={{ color:GR, flexShrink:0 }}>→</span>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{t}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Full leaderboard */}
+      <Card accent={BD}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:11, marginBottom:10, letterSpacing:1 }}>📊 FULL TOURNAMENT LEADERBOARD — B6 GRADE</div>
+        {TOURNAMENT.topScorers.map(p=>(
+          <div key={p.rank} style={{ display:"flex", alignItems:"center", gap:10, padding:"7px 0", borderBottom:`1px solid ${BD}33`, background: p.isMck?GOLD+"08":"transparent", borderRadius:p.isMck?4:0 }}>
+            <div style={{ width:26, color:p.rank<=3?GOLD:MT, fontWeight:p.rank<=3?900:400, fontSize:12, textAlign:"right", flexShrink:0 }}>#{p.rank}</div>
+            <div style={{ flex:1 }}>
+              <div style={{ color:p.isMck?GOLD:TX, fontWeight:p.isMck?800:500, fontSize:13 }}>{p.name} {p.isMck&&"🏀"}</div>
+              <div style={{ color:MT, fontSize:10 }}>{p.team}</div>
+            </div>
+            <div style={{ textAlign:"right" }}>
+              <div style={{ color:p.isMck?GOLD:TX, fontWeight:700, fontSize:14 }}>{p.pts}</div>
+              {p.gp&&<div style={{ color:MT, fontSize:9 }}>{p.gp} gms</div>}
+            </div>
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
+function TrainingTab() {
+  const [open, setOpen] = useState(null);
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ background:`linear-gradient(135deg,#0a0f1a,#1a1005)`, border:`2px solid ${GOLD}`, borderRadius:12, padding:14, marginBottom:14 }}>
+        <div style={{ color:GOLD, fontWeight:900, fontSize:13, letterSpacing:1, marginBottom:4 }}>📅 THURSDAY TRAINING SESSION</div>
+        <div style={{ color:TX, fontWeight:800, fontSize:16, marginBottom:2 }}>Pre-Gippsland Preparation</div>
+        <div style={{ color:MT, fontSize:12, marginBottom:10 }}>60 minutes · Gippsland-specific · Starting 5 focus</div>
+        {/* Starting 5 */}
+        <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>STARTING LINEUP</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:5 }}>
+          {TRAINING.startingFive.map(p=>(
+            <div key={p.pos} style={{ background:MC+"44", border:`1px solid ${GOLD}44`, borderRadius:7, padding:"7px 4px", textAlign:"center" }}>
+              <div style={{ color:GOLD, fontWeight:900, fontSize:11 }}>{p.pos}</div>
+              <div style={{ color:TX, fontWeight:700, fontSize:10, marginTop:2 }}>#{p.num}</div>
+              <div style={{ color:MT, fontSize:9, marginTop:1 }}>{p.name.split(" ")[0]}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Coach notes */}
+      <div style={{ background:"#1a0a00", border:`1px solid ${AM}44`, borderRadius:10, padding:12, marginBottom:14 }}>
+        <div style={{ color:AM, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>⚡ COACH PRIORITY NOTES</div>
+        {TRAINING.coachNotes.map((n,i)=>(
+          <div key={i} style={{ display:"flex", gap:8, marginBottom:7 }}>
+            <span style={{ color:AM, flexShrink:0, fontWeight:700 }}>!</span>
+            <div style={{ color:TX, fontSize:12, lineHeight:1.6 }}>{n}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Training blocks */}
+      <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:8 }}>SESSION PLAN</div>
+      {TRAINING.blocks.map((b,i)=>(
+        <div key={i}>
+          <div onClick={()=>setOpen(open===i?null:i)}
+            style={{ background:open===i?C2:C1, border:`1px solid ${open===i?b.color:BD}`, borderRadius:10, padding:"12px 14px", cursor:"pointer", marginBottom:6 }}>
+            <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+              <div style={{ width:44, height:44, borderRadius:8, background:b.color+"22", border:`2px solid ${b.color}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, flexShrink:0 }}>{b.icon}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+                  <div style={{ color:b.color, fontWeight:800, fontSize:13 }}>{b.label}</div>
+                  <div style={{ background:b.color+"22", border:`1px solid ${b.color}44`, borderRadius:5, padding:"2px 8px", color:b.color, fontSize:10, fontWeight:700, flexShrink:0 }}>{b.time}</div>
+                </div>
+                <div style={{ color:MT, fontSize:11, marginTop:3 }}>{b.desc.substring(0,70)}...</div>
+              </div>
+            </div>
+          </div>
+          {open===i&&(
+            <div style={{ background:C2, border:`1px solid ${b.color}`, borderRadius:10, padding:14, marginBottom:8, marginTop:-4 }}>
+              <div style={{ color:TX, fontSize:12, lineHeight:1.7, marginBottom:12, paddingLeft:8, borderLeft:`3px solid ${b.color}` }}>{b.desc}</div>
+              {b.drills.map((d,j)=>(
+                <div key={j} style={{ background:C1, borderRadius:9, padding:12, marginBottom:8 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                    <div style={{ color:b.color, fontWeight:800, fontSize:13 }}>{d.name}</div>
+                    <div style={{ color:MT, fontSize:10, background:C2, borderRadius:4, padding:"2px 7px" }}>{d.dur}</div>
+                  </div>
+                  <div style={{ color:TX, fontSize:12, lineHeight:1.7 }}>{d.detail}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Time summary */}
+      <div style={{ background:C1, border:`1px solid ${BD}`, borderRadius:10, padding:14, marginTop:4 }}>
+        <div style={{ color:GOLD, fontWeight:800, fontSize:11, letterSpacing:1, marginBottom:10 }}>⏱️ SESSION TIMELINE</div>
+        {TRAINING.blocks.map((b,i)=>(
+          <div key={i} style={{ display:"flex", gap:10, alignItems:"center", marginBottom:8 }}>
+            <div style={{ width:4, height:32, borderRadius:2, background:b.color, flexShrink:0 }} />
+            <div style={{ width:60, color:MT, fontSize:11, flexShrink:0 }}>{b.time}</div>
+            <div style={{ color:TX, fontSize:12, fontWeight:600 }}>{b.icon} {b.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── MAIN APP ─────────────────────────────────────────────────────────────────
+function App() {
+  const [tab, setTab] = useState("nextgame");
+  const TABS = [
+    { id:"nextgame",  icon:"🎯", label:"Next Game" },
+    { id:"training",  icon:"📅", label:"Training" },
+    { id:"results",   icon:"🔥", label:"Form" },
+    { id:"tournament",icon:"🏆", label:"Tourney" },
+    { id:"roster",    icon:"👥", label:"Our Team" },
+    { id:"scout",     icon:"🔍", label:"Scout" },
+    { id:"gameplan",  icon:"📋", label:"Game Plan" },
+  ];
+  return (
+    <div style={{ background:BG, minHeight:"100vh", fontFamily:sans, color:TX }}>
+      {/* Header */}
+      <div style={{ background:`linear-gradient(135deg,#0a0f1a 0%,#1a0505 100%)`, padding:"16px 16px 12px", borderBottom:`2px solid ${GOLD}` }}>
+        <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:8 }}>
+          <div style={{ width:46, height:46, borderRadius:10, background:MC, border:`2px solid ${GOLD}`, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:22, color:GOLD }}>M</div>
+          <div>
+            <div style={{ color:GOLD, fontWeight:900, fontSize:18 }}>McKinnon Cougars 14.3</div>
+            <div style={{ color:"#fda4af", fontSize:12 }}>Head Coach Scout · VJBL P1 2026</div>
+          </div>
+        </div>
+        {/* Stat pills */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:6 }}>
+          {[
+            { label:"Last Night", value:"W 63–21",    color:GR   },
+            { label:"vs Frankston",value:"W 63–21",   color:GR   },
+            { label:"vs Chelsea",  value:"W 43–32",   color:GR   },
+            { label:"Next",       value:"vs Gippsland", color:GOLD },
+          ].map(s=>(
+            <div key={s.label} style={{ background:"#0d1825", borderRadius:8, padding:"6px 6px", textAlign:"center" }}>
+              <div style={{ color:s.color, fontWeight:800, fontSize:12 }}>{s.value}</div>
+              <div style={{ color:MT, fontSize:9, marginTop:1 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display:"flex", background:"#090e18", borderBottom:`1px solid ${BD}` }}>
+        {TABS.map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{ flex:1, background:"none", border:"none", cursor:"pointer", padding:"11px 4px", color:tab===t.id?GOLD:MT, borderBottom:tab===t.id?`2px solid ${GOLD}`:"2px solid transparent", fontWeight:tab===t.id?800:400, fontSize:11, fontFamily:sans, transition:"all .2s" }}>
+            <div style={{ fontSize:18 }}>{t.icon}</div>
+            <div style={{ marginTop:2 }}>{t.label}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ padding:14, maxWidth:700, margin:"0 auto" }}>
+        {tab==="nextgame"   && <NextGameTab />}
+        {tab==="training"   && <TrainingTab />}
+        {tab==="results"    && <RecentResultsTab />}
+        {tab==="tournament" && <TournamentTab />}
+        {tab==="roster"     && <OurRosterTab />}
+        {tab==="scout"      && <GippslandScoutTab />}
+        {tab==="gameplan"   && <GamePlanTab />}
+      </div>
+
+      <div style={{ padding:14, textAlign:"center", color:MT, fontSize:10, borderTop:`1px solid ${BD}` }}>
+        McKinnon 14.3 Head Coach Scout · vs Gippsland United U14 Boys 3 · Next Weekend
+      </div>
+    </div>
+  );
+}
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
